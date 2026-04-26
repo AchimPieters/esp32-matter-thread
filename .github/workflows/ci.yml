@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  build-led-example:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required structure
+        run: |
+          test -d examples/led
+          test -f examples/led/main/main.cpp
+          test -f components/esp32_matter_thread/include/esp32_matter_thread.h
+
+      - name: Validate shell scripts syntax
+        run: bash -n scripts/*.sh
+
+      - name: Build LED example in Docker (ESP32-C6)
+        run: ./scripts/build.sh examples/led esp32c6

@@ -1,0 +1,55 @@
+# development.log
+
+Laatste update: 2026-04-26
+Branch: work
+
+Doel van dit bestand:
+- Één plek om voortgang vast te leggen.
+- Voorkomen dat werk dubbel wordt gedaan.
+- Openstaande taken zichtbaar houden.
+
+## Reeds afgerond
+
+- [x] Basis repositorystructuur opgezet (`components/`, `examples/`, `docker/`, `scripts/`).
+- [x] `esp32_matter_thread` component toegevoegd met LED driver API.
+- [x] LED Matter voorbeeld toegevoegd in `examples/led`.
+- [x] ESP-Matter dependency toegevoegd via `idf_component.yml`.
+- [x] Dockerfile toegevoegd voor ESP-IDF workflow.
+- [x] Scripts toegevoegd: build/flash/monitor/menuconfig/clean.
+- [x] CI workflow toegevoegd (`.github/workflows/ci.yml`).
+- [x] LED configuratie via `menuconfig` toegevoegd (`GPIO`, `active_low`).
+- [x] README en voorbeeld README bijgewerkt.
+
+## Nog te doen (backlog)
+
+### Prioriteit hoog
+- [ ] End-to-end hardware validatie op echte ESP32-C6 (build + flash + commissioning + Thread netwerk).
+- [ ] Commissioning stappen documenteren met concrete `chip-tool` voorbeelden.
+- [ ] CI uitbreiden met extra checks (bijv. formatting/lint voor C/C++ en shellcheck).
+
+### Prioriteit midden
+- [ ] Tweede minimal accessory voorbeeld toevoegen (bijv. switch of button) op dezelfde componentbasis.
+- [ ] Optionele scriptverbetering: `scripts/doctor.sh` voor host checks (docker, usb permissies, board detectie).
+- [ ] Release- en versioning-strategie vastleggen (tags/changelog).
+
+### Prioriteit laag
+- [ ] Kleine template voor nieuwe accessoires onder `examples/<name>`.
+- [ ] Meer troubleshooting secties in README (USB rechten, serial poorten, bekende buildfouten).
+
+## Bekende beperkingen
+
+- In deze ontwikkelomgeving is `docker` niet beschikbaar, daardoor zijn lokale container builds hier niet uitgevoerd.
+- Functionele hardwaretests zijn nog niet in deze omgeving bevestigd.
+
+## Werkwijze bij volgende wijzigingen
+
+1. Werk dit bestand eerst bij (wat ga je doen).
+2. Voer de wijziging uit.
+3. Markeer afgeronde taken en voeg nieuwe open punten toe.
+4. Log kort welke checks zijn uitgevoerd.
+
+## Laatste checks
+
+- `bash -n scripts/*.sh` (ok)
+- `test -f examples/led/main/Kconfig.projbuild` (ok)
+- `./scripts/build.sh examples/led esp32c6` (faalt lokaal zonder docker binary)
