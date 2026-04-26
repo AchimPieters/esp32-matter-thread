@@ -44,7 +44,6 @@ run_idf() {
     -u "$(id -u):$(id -g)" \
     -e HOME=/tmp/esp-home \
     -e XDG_CACHE_HOME=/tmp/esp-home/.cache \
-    -e IDF_TOOLS_PATH=/tmp/esp-home/.espressif \
     -v "$REPO_ROOT:/workspace" \
     -w "/workspace/$example_path" \
     "$IMAGE_NAME" \
@@ -74,7 +73,6 @@ run_idf_with_device() {
     -u "$(id -u):$(id -g)" \
     -e HOME=/tmp/esp-home \
     -e XDG_CACHE_HOME=/tmp/esp-home/.cache \
-    -e IDF_TOOLS_PATH=/tmp/esp-home/.espressif \
     --device "$serial_port" \
     -v "$REPO_ROOT:/workspace" \
     -w "/workspace/$example_path" \
