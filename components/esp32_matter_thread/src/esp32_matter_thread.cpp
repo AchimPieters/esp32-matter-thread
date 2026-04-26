@@ -1,8 +1,10 @@
 #include "esp32_matter_thread.h"
 
+#include <app/server/OnboardingCodesUtil.h>
 #include <driver/gpio.h>
 #include <esp_check.h>
 #include <esp_log.h>
+#include <nvs_flash.h>
 
 static const char *TAG = "esp32_matter_thread";
 static int s_led_gpio = -1;
@@ -45,3 +47,17 @@ esp_err_t esp32_matter_thread_led_set(bool on) {
 }
 
 bool esp32_matter_thread_led_get(void) { return s_led_on; }
+
+esp_err_t esp32_matter_thread_init_nvs(void) {
+    esp_err_t err = nvs_flash_init();
+    if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_RETURN_ON_ERROR(nvs_flash_erase(), TAG, "Failed to erase NVS after init error");
+        err = nvs_flash_init();
+    }
+    return err;
+}
+
+void esp32_matter_thread_print_onboarding_codes_thread(void) {
+    chip::RendezvousInformationFlags rendezvous_flags(chip::RendezvousInformationFlag::kThread);
+    chip::PrintOnboardingCodes(rendezvous_flags);
+}

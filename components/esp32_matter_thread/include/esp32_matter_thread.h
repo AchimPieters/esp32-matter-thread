@@ -28,6 +28,16 @@ esp_err_t esp32_matter_thread_led_set(bool on);
  */
 bool esp32_matter_thread_led_get(void);
 
+/**
+ * @brief Initialize default NVS partition with recovery for common version/page errors.
+ */
+esp_err_t esp32_matter_thread_init_nvs(void);
+
+/**
+ * @brief Print Matter onboarding payloads for Thread rendezvous (QR + manual code).
+ */
+void esp32_matter_thread_print_onboarding_codes_thread(void);
+
 #ifdef __cplusplus
 }
 #endif
