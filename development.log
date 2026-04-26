@@ -20,6 +20,14 @@ Doel van dit bestand:
 - [x] LED configuratie via `menuconfig` toegevoegd (`GPIO`, `active_low`).
 - [x] README en voorbeeld README bijgewerkt.
 
+- [x] `development.log` toegevoegd en gekoppeld vanuit README.
+- [x] Security policy toegevoegd (`SECURITY.md`).
+- [x] Contribution richtlijnen toegevoegd (`CONTRIBUTING.md`).
+- [x] Architectuurdocument toegevoegd (`docs/architecture.md`).
+- [x] Operations runbook toegevoegd (`docs/operations.md`).
+- [x] CI uitgebreid met shellcheck + gescheiden jobs.
+- [x] CodeQL security scan workflow toegevoegd.
+- [x] Docker scripts gehard (docker-check, path-check, no-new-privileges, device-check).
 ## Nog te doen (backlog)
 
 ### Prioriteit hoog

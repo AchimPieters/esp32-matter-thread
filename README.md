@@ -134,3 +134,27 @@ CI checks (`.github/workflows/ci.yml`):
 - structuurchecks (incl. `examples/led`)
 - shell syntax check
 - Dockerized `idf.py build` voor `examples/led` op `esp32c6`
+
+
+## Architecture
+
+Architectuurdocumentatie staat in `docs/architecture.md`.
+
+## Security
+
+Zie `SECURITY.md` voor responsible disclosure en security-baseline.
+
+## Operations
+
+Zie `docs/operations.md` voor runbook en incident handling.
+Gebruik `./scripts/doctor.sh` als snelle preflight check.
+
+## Maintainability
+
+- `development.log` houdt voortgang en backlog actueel.
+- `CONTRIBUTING.md` beschrijft contribution workflow.
+- CI valideert structuur, shellkwaliteit en Dockerized build.
+
+## Productvolwassenheid (huidige status)
+
+Deze repository is nu een sterke en bruikbare basis. Voor echte productievolwassenheid op 100/100 zijn blijvende hardware-validatie, release signing en langdurige veldtesten nog nodig.
