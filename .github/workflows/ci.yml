@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate required structure
+        run: |
+          test -d components/esp32_matter_thread
+          test -d examples/led
+          test -f examples/led/main/main.cpp
+          test -f examples/led/main/Kconfig.projbuild
+          test -f development.log
+          test -f docs/commissioning.md
+          test -f docs/testing.md
+          test -f docs/esp32-lifecycle-manager.md
+          test -f scripts/lifecycle_package.sh
+          test -f scripts/new_example.sh
+          test -f scripts/verify_lifecycle_signature.sh
+          test -f docs/troubleshooting.md
+          test -f NOOB.md
+          test -f scripts/noob_led.sh
+
+  scripts-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bash syntax
+        run: bash -n scripts/*.sh
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Shellcheck scripts
+        run: shellcheck scripts/*.sh
+
+  format-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+      - name: Check C/C++ formatting
+        run: ./scripts/check_format.sh
+
+  docker-build-led:
+    runs-on: ubuntu-latest
+    needs: [structure, scripts-quality, format-quality]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run doctor
+        run: ./scripts/doctor.sh
+      - name: Build LED example in Docker (ESP32-C6)
+        run: ./scripts/build.sh examples/led esp32c6
