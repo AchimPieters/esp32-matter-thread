@@ -6,12 +6,12 @@ if ! command -v clang-format >/dev/null 2>&1; then
   exit 1
 fi
 
-FILES=$(find components examples -type f \( -name "*.c" -o -name "*.cpp" -o -name "*.h" \))
+mapfile -t FILES < <(find components examples -type f \( -name "*.c" -o -name "*.cpp" -o -name "*.h" \))
 
-if [[ -z "$FILES" ]]; then
+if [[ ${#FILES[@]} -eq 0 ]]; then
   echo "No source files found"
   exit 0
 fi
 
-clang-format --dry-run --Werror $FILES
+clang-format --dry-run --Werror "${FILES[@]}"
 echo "Format check passed"

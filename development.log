@@ -32,6 +32,15 @@ Doel van dit bestand:
 
 - [x] LED example print automatisch onboarding QR/manual code in serial output.
 - [x] Noob-proof handleiding toegevoegd (`NOOB.md`) + one-command helper script (`scripts/noob_led.sh`).
+- [x] Deep code audit toegevoegd (`docs/code-audit.md`) met concrete verbeteracties.
+- [x] Component manifest toegevoegd (`components/esp32_matter_thread/idf_component.yml`) voor external dependency consumption.
+- [x] NVS init + onboarding QR/manual code printing verplaatst naar herbruikbare component API.
+- [x] LED example aangepast om nieuwe herbruikbare API te gebruiken.
+- [x] README uitgebreid met expliciet “gebruik als dependency in externe repo” recept.
+- [x] High-level start API toegevoegd zodat `esp32_matter_thread.h` Matter/Thread bootstrap intern afhandelt.
+- [x] Extra one-call helper toegevoegd: `esp32_matter_thread_start_on_off_light(...)`.
+- [x] Quality gate script toegevoegd (`scripts/quality_gate.sh`) voor snelle lokale kwaliteitsvalidatie.
+- [x] Maturity scorecard toegevoegd met 100/100 criteria (`docs/maturity-scorecard.md`).
 ## Nog te doen (backlog)
 
 ### Prioriteit hoog
@@ -54,3 +63,4 @@ Doel van dit bestand:
 - `bash -n scripts/*.sh` (ok)
 - `./scripts/check_format.sh` (ok)
 - `./scripts/lifecycle_package.sh examples/led` (verwacht fail zonder build output)
+- `bash -n scripts/*.sh` (ok, 2026-04-26)

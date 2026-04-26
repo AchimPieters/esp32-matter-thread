@@ -5,6 +5,7 @@ Dit voorbeeld is de minimale maar functionele validatie van `esp32-matter-thread
 ## Functionaliteit
 
 - Initialiseert ESP-Matter + NVS
+- Doet dit volledig via `#include "esp32_matter_thread.h"` + `esp32_matter_thread_start(...)`
 - Maakt een **Matter On/Off Light** endpoint
 - Verbindt de Matter `OnOff` attribute met een fysieke LED GPIO
 - Werkt voor active-high en active-low LED wiring
