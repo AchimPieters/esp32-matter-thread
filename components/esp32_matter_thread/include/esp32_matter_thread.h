@@ -10,6 +10,7 @@ extern "C" {
 
 typedef struct {
     int led_gpio;
+    bool active_low;
 } esp32_matter_thread_led_config_t;
 
 /**
@@ -21,6 +22,11 @@ esp_err_t esp32_matter_thread_led_driver_init(const esp32_matter_thread_led_conf
  * @brief Set the physical LED state.
  */
 esp_err_t esp32_matter_thread_led_set(bool on);
+
+/**
+ * @brief Return last requested logical LED state.
+ */
+bool esp32_matter_thread_led_get(void);
 
 #ifdef __cplusplus
 }

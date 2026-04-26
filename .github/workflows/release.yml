@@ -1,0 +1,21 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-led-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build LED example
+        run: ./scripts/build.sh examples/led esp32c6
+      - name: Archive build output
+        run: tar -czf led-build-artifacts.tar.gz examples/led/build
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: led-build-artifacts
+          path: led-build-artifacts.tar.gz

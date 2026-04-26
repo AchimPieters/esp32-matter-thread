@@ -1,19 +1,25 @@
 # LED Matter + Thread Example
 
-Dit voorbeeld is de minimale validatie voor de basis van `esp32-matter-thread`.
+Dit voorbeeld is de minimale maar functionele validatie van `esp32-matter-thread` op ESP32-C6.
 
-## Wat doet dit voorbeeld?
+## Functionaliteit
 
-- Initialiseerd ESP-Matter.
-- Maakt een **On/Off Light** endpoint.
-- Koppelt de Matter `OnOff` attribute aan een fysieke LED GPIO.
-- Is bedoeld als quick check voor build/flash/monitor en Matter initialisatie op ESP32-C6.
+- Initialiseert ESP-Matter + NVS
+- Maakt een **Matter On/Off Light** endpoint
+- Verbindt de Matter `OnOff` attribute met een fysieke LED GPIO
+- Werkt voor active-high en active-low LED wiring
 
-## GPIO aanpassen
+## Configuratie
 
-Standaard staat de LED op GPIO `8`.
+Instelbaar via menuconfig:
 
-Pas in `main/main.cpp` de waarde van `kDefaultLedGpio` aan.
+- `LED Matter Example Configuration -> LED GPIO`
+- `LED Matter Example Configuration -> LED is active-low`
+
+Defaults staan in `sdkconfig.defaults`:
+
+- `CONFIG_EXAMPLE_LED_GPIO=8`
+- `CONFIG_EXAMPLE_LED_ACTIVE_LOW=n`
 
 ## Build en flash
 
@@ -25,6 +31,6 @@ Vanaf repository root:
 ./scripts/monitor.sh /dev/ttyUSB0 examples/led
 ```
 
-## Let op
+## Matter over Thread
 
-Voor volledige Matter-over-Thread end-to-end tests heb je een Thread Border Router nodig.
+Voor volledige end-to-end tests heb je een Thread Border Router nodig.

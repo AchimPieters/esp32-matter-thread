@@ -52,6 +52,7 @@ esp32-matter-thread/
   CMakeLists.txt
   README.md
   LICENSE
+  CHANGELOG.md
   .gitignore
 ```
 
@@ -74,6 +75,7 @@ Extra:
 ```bash
 ./scripts/menuconfig.sh examples/led esp32c6
 ./scripts/clean.sh examples/led
+./scripts/check_format.sh
 ```
 
 
@@ -93,15 +95,17 @@ Het LED voorbeeld onder `examples/led`:
 
 - Maakt een Matter `On/Off Light` endpoint
 - Koppelt de `OnOff` attribute aan een fysieke GPIO LED
-- Is bedoeld als minimale test van:
-  - build
-  - flash
-  - serial monitor
-  - Matter initialisatie
+- Is bedoeld als functionele baseline voor build/flash/monitor en Matter init op ESP32-C6
 
-Standaard GPIO is `8`. Dit is eenvoudig aan te passen in:
+GPIO en polarity zijn configureerbaar via `menuconfig`:
 
-- `examples/led/main/main.cpp` (`kDefaultLedGpio`)
+- `LED Matter Example Configuration -> LED GPIO`
+- `LED Matter Example Configuration -> LED is active-low`
+
+Standaardwaarden:
+
+- `CONFIG_EXAMPLE_LED_GPIO=8`
+- `CONFIG_EXAMPLE_LED_ACTIVE_LOW=n`
 
 ## Nieuwe accessoires toevoegen
 
@@ -113,3 +117,60 @@ Aanpak voor volgende accessoires:
 4. Koppel attribute callbacks naar de device driver
 
 Houd de eerste implementaties klein en functioneel; breid abstrahering pas uit wanneer meerdere accessoires dezelfde patronen delen.
+
+
+## Ontwikkelvoortgang
+
+Voor voortgang en openstaande taken, zie `development.log`.
+
+## Validatie
+
+Lokale checks:
+
+```bash
+bash -n scripts/*.sh
+```
+
+CI checks (`.github/workflows/ci.yml`):
+
+- structuurchecks (incl. `examples/led`)
+- shell syntax check
+- Dockerized `idf.py build` voor `examples/led` op `esp32c6`
+
+
+## Architecture
+
+Architectuurdocumentatie staat in `docs/architecture.md`.
+
+## Security
+
+Zie `SECURITY.md` voor responsible disclosure en security-baseline.
+
+## Operations
+
+Zie `docs/operations.md` voor runbook en incident handling.
+Gebruik `./scripts/doctor.sh` als snelle preflight check.
+
+## Maintainability
+
+- `development.log` houdt voortgang en backlog actueel.
+- `CONTRIBUTING.md` beschrijft contribution workflow.
+- CI valideert structuur, shellkwaliteit en Dockerized build.
+
+## Productvolwassenheid (huidige status)
+
+Deze repository is nu een sterke en bruikbare basis. Voor echte productievolwassenheid op 100/100 zijn blijvende hardware-validatie, release signing en langdurige veldtesten nog nodig.
+
+
+## Commissioning
+
+Zie `docs/commissioning.md` voor chip-tool onboarding en command voorbeelden.
+
+## Testing
+
+Zie `docs/testing.md` voor static/build/hardware teststrategie.
+
+## Releases
+
+- Tag releases als `vX.Y.Z` om de release-build workflow te triggeren.
+- Wijzigingen worden bijgehouden in `CHANGELOG.md`.

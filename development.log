@@ -1,0 +1,59 @@
+# development.log
+
+Laatste update: 2026-04-26
+Branch: work
+
+Doel van dit bestand:
+- Één plek om voortgang vast te leggen.
+- Voorkomen dat werk dubbel wordt gedaan.
+- Openstaande taken zichtbaar houden.
+
+## Reeds afgerond
+
+- [x] Basis repositorystructuur opgezet (`components/`, `examples/`, `docker/`, `scripts/`).
+- [x] `esp32_matter_thread` component toegevoegd met LED driver API.
+- [x] LED Matter voorbeeld toegevoegd in `examples/led`.
+- [x] ESP-Matter dependency toegevoegd via `idf_component.yml`.
+- [x] Dockerfile + scripts toegevoegd (build/flash/monitor/menuconfig/clean/doctor).
+- [x] CI workflow toegevoegd en uitgebreid (structuur, shell syntax, shellcheck, format, dockerized build).
+- [x] CodeQL + Trivy security scans toegevoegd.
+- [x] Dependabot voor GitHub Actions toegevoegd.
+- [x] LED configuratie via `menuconfig` toegevoegd (`GPIO`, `active_low`).
+- [x] Security/Contributing/Architecture/Operations docs toegevoegd.
+- [x] Commissioning guide toegevoegd (`docs/commissioning.md`).
+- [x] Testing strategy toegevoegd (`docs/testing.md`).
+- [x] Release workflow toegevoegd (tag `v*` -> build artifact).
+- [x] `development.log` gekoppeld vanuit README.
+- [x] `CHANGELOG.md` toegevoegd.
+
+## Nog te doen (backlog)
+
+### Prioriteit hoog
+- [ ] End-to-end hardware validatie op echte ESP32-C6 (commissioning + Thread + on/off flow).
+- [ ] Release artifacts cryptografisch signen en verifiëren in CI.
+
+### Prioriteit midden
+- [ ] Tweede minimal accessory voorbeeld toevoegen (bijv. switch of button).
+- [ ] Troubleshooting sectie uitbreiden met bekende foutcodes en oplossingen.
+
+### Prioriteit laag
+- [ ] Template generator voor nieuwe accessories onder `examples/<name>`.
+
+## Bekende beperkingen
+
+- In deze ontwikkelomgeving is `docker` niet beschikbaar, daardoor zijn lokale container builds hier niet uitgevoerd.
+- Functionele hardwaretests zijn nog niet in deze omgeving bevestigd.
+
+## Werkwijze bij volgende wijzigingen
+
+1. Werk dit bestand eerst bij (wat ga je doen).
+2. Voer de wijziging uit.
+3. Markeer afgeronde taken en voeg nieuwe open punten toe.
+4. Log kort welke checks zijn uitgevoerd.
+
+## Laatste checks
+
+- `bash -n scripts/*.sh` (ok)
+- `test -f docs/commissioning.md` (ok)
+- `test -f docs/testing.md` (ok)
+- `./scripts/doctor.sh` (faalt lokaal zonder docker binary)
