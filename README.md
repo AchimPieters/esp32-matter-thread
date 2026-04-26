@@ -4,6 +4,30 @@
 
 Deze repository is bewust opgezet als **foundation/library component-structuur**, niet als demo-verzameling. Het eerste minimale voorbeeld is een LED-accessoire onder `examples/led`.
 
+## Gebruik als dependency in een externe ESP-IDF repo
+
+Net als `esp32-homekit` kun je deze repository als component-afhankelijkheid gebruiken via de IDF Component Manager.
+
+In jouw project (bijv. `main/idf_component.yml`):
+
+```yaml
+dependencies:
+  achimpieters/esp32-matter-thread: ">=0.1.0"
+```
+
+Daarna kun je in je code direct gebruiken:
+
+```cpp
+#include "esp32_matter_thread.h"
+```
+
+En onboarding (QR + manual code) automatisch printen met:
+
+```cpp
+ESP_ERROR_CHECK(esp32_matter_thread_init_nvs());
+esp32_matter_thread_print_onboarding_codes_thread();
+```
+
 ## Doel van deze repository
 
 - Basiscomponent: `esp32_matter_thread`
@@ -170,6 +194,10 @@ Deze repository is nu een sterke en bruikbare basis. Voor echte productievolwass
 ## Commissioning
 
 Zie `docs/commissioning.md` voor chip-tool onboarding en command voorbeelden.
+
+## Code audit
+
+Zie `docs/code-audit.md` voor een uitgebreide deep-dive audit en concrete verbeter/roadmap voor volledig automatische consumptie van dit component in andere repositories.
 
 ## Testing
 
