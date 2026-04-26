@@ -52,6 +52,7 @@ esp32-matter-thread/
   CMakeLists.txt
   README.md
   LICENSE
+  CHANGELOG.md
   .gitignore
 ```
 
@@ -74,6 +75,7 @@ Extra:
 ```bash
 ./scripts/menuconfig.sh examples/led esp32c6
 ./scripts/clean.sh examples/led
+./scripts/check_format.sh
 ```
 
 
@@ -158,3 +160,17 @@ Gebruik `./scripts/doctor.sh` als snelle preflight check.
 ## Productvolwassenheid (huidige status)
 
 Deze repository is nu een sterke en bruikbare basis. Voor echte productievolwassenheid op 100/100 zijn blijvende hardware-validatie, release signing en langdurige veldtesten nog nodig.
+
+
+## Commissioning
+
+Zie `docs/commissioning.md` voor chip-tool onboarding en command voorbeelden.
+
+## Testing
+
+Zie `docs/testing.md` voor static/build/hardware teststrategie.
+
+## Releases
+
+- Tag releases als `vX.Y.Z` om de release-build workflow te triggeren.
+- Wijzigingen worden bijgehouden in `CHANGELOG.md`.

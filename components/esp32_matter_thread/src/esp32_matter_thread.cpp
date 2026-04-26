@@ -9,13 +9,9 @@ static int s_led_gpio = -1;
 static bool s_active_low = false;
 static bool s_led_on = false;
 
-static int physical_level(bool on)
-{
-    return s_active_low ? (on ? 0 : 1) : (on ? 1 : 0);
-}
+static int physical_level(bool on) { return s_active_low ? (on ? 0 : 1) : (on ? 1 : 0); }
 
-esp_err_t esp32_matter_thread_led_driver_init(const esp32_matter_thread_led_config_t *config)
-{
+esp_err_t esp32_matter_thread_led_driver_init(const esp32_matter_thread_led_config_t *config) {
     if (config == nullptr || config->led_gpio < 0) {
         return ESP_ERR_INVALID_ARG;
     }
@@ -39,8 +35,7 @@ esp_err_t esp32_matter_thread_led_driver_init(const esp32_matter_thread_led_conf
     return ESP_OK;
 }
 
-esp_err_t esp32_matter_thread_led_set(bool on)
-{
+esp_err_t esp32_matter_thread_led_set(bool on) {
     if (s_led_gpio < 0) {
         return ESP_ERR_INVALID_STATE;
     }
@@ -49,7 +44,4 @@ esp_err_t esp32_matter_thread_led_set(bool on)
     return gpio_set_level((gpio_num_t)s_led_gpio, physical_level(on));
 }
 
-bool esp32_matter_thread_led_get(void)
-{
-    return s_led_on;
-}
+bool esp32_matter_thread_led_get(void) { return s_led_on; }

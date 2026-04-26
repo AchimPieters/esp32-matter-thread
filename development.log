@@ -14,35 +14,30 @@ Doel van dit bestand:
 - [x] `esp32_matter_thread` component toegevoegd met LED driver API.
 - [x] LED Matter voorbeeld toegevoegd in `examples/led`.
 - [x] ESP-Matter dependency toegevoegd via `idf_component.yml`.
-- [x] Dockerfile toegevoegd voor ESP-IDF workflow.
-- [x] Scripts toegevoegd: build/flash/monitor/menuconfig/clean.
-- [x] CI workflow toegevoegd (`.github/workflows/ci.yml`).
+- [x] Dockerfile + scripts toegevoegd (build/flash/monitor/menuconfig/clean/doctor).
+- [x] CI workflow toegevoegd en uitgebreid (structuur, shell syntax, shellcheck, format, dockerized build).
+- [x] CodeQL + Trivy security scans toegevoegd.
+- [x] Dependabot voor GitHub Actions toegevoegd.
 - [x] LED configuratie via `menuconfig` toegevoegd (`GPIO`, `active_low`).
-- [x] README en voorbeeld README bijgewerkt.
+- [x] Security/Contributing/Architecture/Operations docs toegevoegd.
+- [x] Commissioning guide toegevoegd (`docs/commissioning.md`).
+- [x] Testing strategy toegevoegd (`docs/testing.md`).
+- [x] Release workflow toegevoegd (tag `v*` -> build artifact).
+- [x] `development.log` gekoppeld vanuit README.
+- [x] `CHANGELOG.md` toegevoegd.
 
-- [x] `development.log` toegevoegd en gekoppeld vanuit README.
-- [x] Security policy toegevoegd (`SECURITY.md`).
-- [x] Contribution richtlijnen toegevoegd (`CONTRIBUTING.md`).
-- [x] Architectuurdocument toegevoegd (`docs/architecture.md`).
-- [x] Operations runbook toegevoegd (`docs/operations.md`).
-- [x] CI uitgebreid met shellcheck + gescheiden jobs.
-- [x] CodeQL security scan workflow toegevoegd.
-- [x] Docker scripts gehard (docker-check, path-check, no-new-privileges, device-check).
 ## Nog te doen (backlog)
 
 ### Prioriteit hoog
-- [ ] End-to-end hardware validatie op echte ESP32-C6 (build + flash + commissioning + Thread netwerk).
-- [ ] Commissioning stappen documenteren met concrete `chip-tool` voorbeelden.
-- [ ] CI uitbreiden met extra checks (bijv. formatting/lint voor C/C++ en shellcheck).
+- [ ] End-to-end hardware validatie op echte ESP32-C6 (commissioning + Thread + on/off flow).
+- [ ] Release artifacts cryptografisch signen en verifiëren in CI.
 
 ### Prioriteit midden
-- [ ] Tweede minimal accessory voorbeeld toevoegen (bijv. switch of button) op dezelfde componentbasis.
-- [ ] Optionele scriptverbetering: `scripts/doctor.sh` voor host checks (docker, usb permissies, board detectie).
-- [ ] Release- en versioning-strategie vastleggen (tags/changelog).
+- [ ] Tweede minimal accessory voorbeeld toevoegen (bijv. switch of button).
+- [ ] Troubleshooting sectie uitbreiden met bekende foutcodes en oplossingen.
 
 ### Prioriteit laag
-- [ ] Kleine template voor nieuwe accessoires onder `examples/<name>`.
-- [ ] Meer troubleshooting secties in README (USB rechten, serial poorten, bekende buildfouten).
+- [ ] Template generator voor nieuwe accessories onder `examples/<name>`.
 
 ## Bekende beperkingen
 
@@ -59,5 +54,6 @@ Doel van dit bestand:
 ## Laatste checks
 
 - `bash -n scripts/*.sh` (ok)
-- `test -f examples/led/main/Kconfig.projbuild` (ok)
-- `./scripts/build.sh examples/led esp32c6` (faalt lokaal zonder docker binary)
+- `test -f docs/commissioning.md` (ok)
+- `test -f docs/testing.md` (ok)
+- `./scripts/doctor.sh` (faalt lokaal zonder docker binary)

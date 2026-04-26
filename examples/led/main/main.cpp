@@ -14,9 +14,9 @@ using namespace esp_matter::endpoint;
 static const char *TAG = "led_example";
 
 static esp_err_t app_attribute_update_cb(callback_type_t type, uint16_t endpoint_id, uint32_t cluster_id,
-                                         uint32_t attribute_id, esp_matter_attr_val_t *val, void *priv_data)
-{
-    if (type != PRE_UPDATE || cluster_id != OnOff::Id || attribute_id != OnOff::Attributes::OnOff::Id || val == nullptr) {
+                                         uint32_t attribute_id, esp_matter_attr_val_t *val, void *priv_data) {
+    if (type != PRE_UPDATE || cluster_id != OnOff::Id || attribute_id != OnOff::Attributes::OnOff::Id ||
+        val == nullptr) {
         return ESP_OK;
     }
 
@@ -25,8 +25,7 @@ static esp_err_t app_attribute_update_cb(callback_type_t type, uint16_t endpoint
     return esp32_matter_thread_led_set(on);
 }
 
-static void init_nvs(void)
-{
+static void init_nvs(void) {
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
@@ -35,8 +34,7 @@ static void init_nvs(void)
     ESP_ERROR_CHECK(err);
 }
 
-extern "C" void app_main(void)
-{
+extern "C" void app_main(void) {
     init_nvs();
 
     esp32_matter_thread_led_config_t led_cfg = {
