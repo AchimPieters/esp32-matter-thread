@@ -37,6 +37,10 @@ Doel van dit bestand:
 - [x] NVS init + onboarding QR/manual code printing verplaatst naar herbruikbare component API.
 - [x] LED example aangepast om nieuwe herbruikbare API te gebruiken.
 - [x] README uitgebreid met expliciet “gebruik als dependency in externe repo” recept.
+- [x] High-level start API toegevoegd zodat `esp32_matter_thread.h` Matter/Thread bootstrap intern afhandelt.
+- [x] Extra one-call helper toegevoegd: `esp32_matter_thread_start_on_off_light(...)`.
+- [x] Quality gate script toegevoegd (`scripts/quality_gate.sh`) voor snelle lokale kwaliteitsvalidatie.
+- [x] Maturity scorecard toegevoegd met 100/100 criteria (`docs/maturity-scorecard.md`).
 ## Nog te doen (backlog)
 
 ### Prioriteit hoog

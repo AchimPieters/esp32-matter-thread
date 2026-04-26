@@ -86,6 +86,9 @@ Nieuwe publieke API in `esp32_matter_thread.h`:
 
 - `esp32_matter_thread_init_nvs()`
 - `esp32_matter_thread_print_onboarding_codes_thread()`
+- `esp32_matter_thread_default_config()`
+- `esp32_matter_thread_start()`
+- `esp32_matter_thread_start_on_off_light()`
 
 Geïmplementeerd in `esp32_matter_thread.cpp`:
 
@@ -134,9 +137,10 @@ In een nieuwe ESP-IDF app:
    ```
 3. In `app_main()`:
    ```cpp
-   ESP_ERROR_CHECK(esp32_matter_thread_init_nvs());
-   // ... Matter startup ...
-   esp32_matter_thread_print_onboarding_codes_thread();
+   esp32_matter_thread_config_t cfg = esp32_matter_thread_default_config();
+   cfg.accessory_type = ESP32_MATTER_THREAD_ACCESSORY_ON_OFF_LIGHT;
+   cfg.primary_gpio = 8;
+   ESP_ERROR_CHECK(esp32_matter_thread_start(&cfg));
    ```
 
 Bij startup worden onboarding payloads (QR/manual) in serial output geprint.

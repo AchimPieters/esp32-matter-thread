@@ -1,48 +1,14 @@
-#include <app-common/zap-generated/attributes/Accessors.h>
 #include <esp_err.h>
 #include <esp_log.h>
-#include <esp_matter.h>
 #include <sdkconfig.h>
 
 #include "esp32_matter_thread.h"
 
-using namespace esp_matter;
-using namespace esp_matter::cluster;
-using namespace esp_matter::endpoint;
-
 static const char *TAG = "led_example";
 
-static esp_err_t app_attribute_update_cb(callback_type_t type, uint16_t endpoint_id, uint32_t cluster_id,
-                                         uint32_t attribute_id, esp_matter_attr_val_t *val, void *priv_data) {
-    if (type != PRE_UPDATE || cluster_id != OnOff::Id || attribute_id != OnOff::Attributes::OnOff::Id ||
-        val == nullptr) {
-        return ESP_OK;
-    }
-
-    const bool on = val->val.b;
-    ESP_LOGI(TAG, "OnOff update: endpoint=%u value=%s", endpoint_id, on ? "ON" : "OFF");
-    return esp32_matter_thread_led_set(on);
-}
-
 extern "C" void app_main(void) {
-    ESP_ERROR_CHECK(esp32_matter_thread_init_nvs());
-
-    esp32_matter_thread_led_config_t led_cfg = {
-        .led_gpio = CONFIG_EXAMPLE_LED_GPIO,
-        .active_low = CONFIG_EXAMPLE_LED_ACTIVE_LOW,
-    };
-    ESP_ERROR_CHECK(esp32_matter_thread_led_driver_init(&led_cfg));
-
-    node::config_t node_config = {};
-    node_t *node = node::create(&node_config, app_attribute_update_cb, nullptr);
-    ESP_ERROR_CHECK(node != nullptr ? ESP_OK : ESP_FAIL);
-
-    on_off_light::config_t light_config = {};
-    endpoint_t *light_endpoint = on_off_light::create(node, &light_config, ENDPOINT_FLAG_NONE, nullptr);
-    ESP_ERROR_CHECK(light_endpoint != nullptr ? ESP_OK : ESP_FAIL);
-
-    ESP_ERROR_CHECK(esp_matter::start(nullptr));
-    esp32_matter_thread_print_onboarding_codes_thread();
+    ESP_ERROR_CHECK(
+        esp32_matter_thread_start_on_off_light(CONFIG_EXAMPLE_LED_GPIO, CONFIG_EXAMPLE_LED_ACTIVE_LOW, true));
 
     ESP_LOGI(TAG, "Matter LED accessory started (GPIO=%d, active_%s)", CONFIG_EXAMPLE_LED_GPIO,
              CONFIG_EXAMPLE_LED_ACTIVE_LOW ? "low" : "high");

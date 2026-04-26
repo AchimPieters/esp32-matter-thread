@@ -24,8 +24,12 @@ Daarna kun je in je code direct gebruiken:
 En onboarding (QR + manual code) automatisch printen met:
 
 ```cpp
-ESP_ERROR_CHECK(esp32_matter_thread_init_nvs());
-esp32_matter_thread_print_onboarding_codes_thread();
+esp32_matter_thread_config_t cfg = esp32_matter_thread_default_config();
+cfg.accessory_type = ESP32_MATTER_THREAD_ACCESSORY_ON_OFF_LIGHT;
+cfg.primary_gpio = 8;
+cfg.primary_gpio_active_low = false;
+cfg.print_onboarding_codes = true;
+ESP_ERROR_CHECK(esp32_matter_thread_start(&cfg));
 ```
 
 ## Doel van deze repository
@@ -101,6 +105,7 @@ Extra:
 ./scripts/menuconfig.sh examples/led esp32c6
 ./scripts/clean.sh examples/led
 ./scripts/check_format.sh
+./scripts/quality_gate.sh
 ./scripts/lifecycle_package.sh examples/led
 ./scripts/verify_lifecycle_signature.sh examples/led/dist ./keys/lifecycle_public.pem
 ./scripts/new_example.sh my_accessory
@@ -198,6 +203,10 @@ Zie `docs/commissioning.md` voor chip-tool onboarding en command voorbeelden.
 ## Code audit
 
 Zie `docs/code-audit.md` voor een uitgebreide deep-dive audit en concrete verbeter/roadmap voor volledig automatische consumptie van dit component in andere repositories.
+
+## Maturity scorecard
+
+Zie `docs/maturity-scorecard.md` voor de 100/100 kwaliteitscriteria en status per domein (architectuur/security/operations/maintainability/productvolwassenheid).
 
 ## Testing
 
