@@ -9,8 +9,7 @@ jobs:
   build-led-artifact:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
+      - uses: actions/checkout@v6
       - name: Build LED example
         run: ./scripts/build.sh examples/led esp32c6
 
