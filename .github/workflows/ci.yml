@@ -19,6 +19,13 @@ jobs:
           test -f development.log
           test -f docs/commissioning.md
           test -f docs/testing.md
+          test -f docs/esp32-lifecycle-manager.md
+          test -f scripts/lifecycle_package.sh
+          test -f scripts/new_example.sh
+          test -f scripts/verify_lifecycle_signature.sh
+          test -f docs/troubleshooting.md
+          test -f NOOB.md
+          test -f scripts/noob_led.sh
 
   scripts-quality:
     runs-on: ubuntu-latest

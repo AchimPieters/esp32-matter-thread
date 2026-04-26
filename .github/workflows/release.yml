@@ -10,12 +10,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Build LED example
         run: ./scripts/build.sh examples/led esp32c6
-      - name: Archive build output
-        run: tar -czf led-build-artifacts.tar.gz examples/led/build
+
+      - name: Write signing keys (optional)
+        if: ${{ secrets.LIFECYCLE_PRIVATE_KEY != '' && secrets.LIFECYCLE_PUBLIC_KEY != '' }}
+        run: |
+          mkdir -p .keys
+          printf '%s' "${{ secrets.LIFECYCLE_PRIVATE_KEY }}" > .keys/lifecycle_private.pem
+          printf '%s' "${{ secrets.LIFECYCLE_PUBLIC_KEY }}" > .keys/lifecycle_public.pem
+          chmod 600 .keys/lifecycle_private.pem .keys/lifecycle_public.pem
+
+      - name: Package lifecycle artifacts (unsigned)
+        if: ${{ secrets.LIFECYCLE_PRIVATE_KEY == '' || secrets.LIFECYCLE_PUBLIC_KEY == '' }}
+        run: ./scripts/lifecycle_package.sh examples/led
+
+      - name: Package lifecycle artifacts (signed)
+        if: ${{ secrets.LIFECYCLE_PRIVATE_KEY != '' && secrets.LIFECYCLE_PUBLIC_KEY != '' }}
+        run: ./scripts/lifecycle_package.sh examples/led .keys/lifecycle_private.pem
+
+      - name: Verify lifecycle signature
+        if: ${{ secrets.LIFECYCLE_PRIVATE_KEY != '' && secrets.LIFECYCLE_PUBLIC_KEY != '' }}
+        run: ./scripts/verify_lifecycle_signature.sh examples/led/dist .keys/lifecycle_public.pem
+
+      - name: Archive lifecycle output
+        run: tar -czf led-lifecycle-artifacts.tar.gz examples/led/dist
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: led-build-artifacts
-          path: led-build-artifacts.tar.gz
+          name: led-lifecycle-artifacts
+          path: led-lifecycle-artifacts.tar.gz

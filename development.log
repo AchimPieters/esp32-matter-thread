@@ -25,19 +25,17 @@ Doel van dit bestand:
 - [x] Release workflow toegevoegd (tag `v*` -> build artifact).
 - [x] `development.log` gekoppeld vanuit README.
 - [x] `CHANGELOG.md` toegevoegd.
+- [x] Compatibiliteit met `esp32-lifecycle-manager` toegevoegd (package script + docs + release workflow artifacts).
+- [x] Signature-verificatie toegevoegd (`scripts/verify_lifecycle_signature.sh`) + signed release flow met secrets.
+- [x] Troubleshooting guide toegevoegd (`docs/troubleshooting.md`).
+- [x] Scaffold script voor nieuwe voorbeelden toegevoegd (`scripts/new_example.sh`).
 
+- [x] LED example print automatisch onboarding QR/manual code in serial output.
+- [x] Noob-proof handleiding toegevoegd (`NOOB.md`) + one-command helper script (`scripts/noob_led.sh`).
 ## Nog te doen (backlog)
 
 ### Prioriteit hoog
-- [ ] End-to-end hardware validatie op echte ESP32-C6 (commissioning + Thread + on/off flow).
-- [ ] Release artifacts cryptografisch signen en verifiëren in CI.
-
-### Prioriteit midden
-- [ ] Tweede minimal accessory voorbeeld toevoegen (bijv. switch of button).
-- [ ] Troubleshooting sectie uitbreiden met bekende foutcodes en oplossingen.
-
-### Prioriteit laag
-- [ ] Template generator voor nieuwe accessories onder `examples/<name>`.
+- [ ] End-to-end hardware validatie op echte ESP32-C6 (commissioning + Thread + on/off flow) met aantoonbare testresultaten.
 
 ## Bekende beperkingen
 
@@ -54,6 +52,5 @@ Doel van dit bestand:
 ## Laatste checks
 
 - `bash -n scripts/*.sh` (ok)
-- `test -f docs/commissioning.md` (ok)
-- `test -f docs/testing.md` (ok)
-- `./scripts/doctor.sh` (faalt lokaal zonder docker binary)
+- `./scripts/check_format.sh` (ok)
+- `./scripts/lifecycle_package.sh examples/led` (verwacht fail zonder build output)

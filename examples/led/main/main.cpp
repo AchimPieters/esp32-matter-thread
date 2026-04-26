@@ -1,4 +1,5 @@
 #include <app-common/zap-generated/attributes/Accessors.h>
+#include <app/server/OnboardingCodesUtil.h>
 #include <esp_err.h>
 #include <esp_log.h>
 #include <esp_matter.h>
@@ -23,6 +24,11 @@ static esp_err_t app_attribute_update_cb(callback_type_t type, uint16_t endpoint
     const bool on = val->val.b;
     ESP_LOGI(TAG, "OnOff update: endpoint=%u value=%s", endpoint_id, on ? "ON" : "OFF");
     return esp32_matter_thread_led_set(on);
+}
+
+static void print_onboarding_codes(void) {
+    chip::RendezvousInformationFlags rendezvous_flags(chip::RendezvousInformationFlag::kThread);
+    chip::PrintOnboardingCodes(rendezvous_flags);
 }
 
 static void init_nvs(void) {
@@ -52,6 +58,7 @@ extern "C" void app_main(void) {
     ESP_ERROR_CHECK(light_endpoint != nullptr ? ESP_OK : ESP_FAIL);
 
     ESP_ERROR_CHECK(esp_matter::start(nullptr));
+    print_onboarding_codes();
 
     ESP_LOGI(TAG, "Matter LED accessory started (GPIO=%d, active_%s)", CONFIG_EXAMPLE_LED_GPIO,
              CONFIG_EXAMPLE_LED_ACTIVE_LOW ? "low" : "high");
