@@ -68,6 +68,7 @@ Vanaf repository root:
 ./scripts/build.sh examples/led esp32c6
 ./scripts/flash.sh examples/led /dev/ttyUSB0
 ./scripts/monitor.sh /dev/ttyUSB0 examples/led
+./scripts/noob_led.sh /dev/ttyUSB0
 ```
 
 Extra:
@@ -76,6 +77,9 @@ Extra:
 ./scripts/menuconfig.sh examples/led esp32c6
 ./scripts/clean.sh examples/led
 ./scripts/check_format.sh
+./scripts/lifecycle_package.sh examples/led
+./scripts/verify_lifecycle_signature.sh examples/led/dist ./keys/lifecycle_public.pem
+./scripts/new_example.sh my_accessory
 ```
 
 
@@ -96,6 +100,7 @@ Het LED voorbeeld onder `examples/led`:
 - Maakt een Matter `On/Off Light` endpoint
 - Koppelt de `OnOff` attribute aan een fysieke GPIO LED
 - Is bedoeld als functionele baseline voor build/flash/monitor en Matter init op ESP32-C6
+- Print automatisch QR/Matter onboarding code in serial output na startup
 
 GPIO en polarity zijn configureerbaar via `menuconfig`:
 
@@ -174,3 +179,20 @@ Zie `docs/testing.md` voor static/build/hardware teststrategie.
 
 - Tag releases als `vX.Y.Z` om de release-build workflow te triggeren.
 - Wijzigingen worden bijgehouden in `CHANGELOG.md`.
+
+
+## Compatibiliteit met esp32-lifecycle-manager
+
+Deze repository kan lifecycle-compatible firmware artifacts genereren (`main.bin`, `manifest.json`, optioneel `main.bin.sig`) voor distributie via `esp32-lifecycle-manager`.
+
+Zie `docs/esp32-lifecycle-manager.md` voor de volledige flow.
+
+
+## Troubleshooting
+
+Zie `docs/troubleshooting.md` voor veelvoorkomende fouten en oplossingen.
+
+
+## Beginner handleiding
+
+Voor een volledige stap-voor-stap uitleg (build, flash, monitor en koppelen met iPhone Home), zie `NOOB.md`.

@@ -25,3 +25,19 @@
 - If Docker missing: install Docker Desktop / Docker Engine.
 - If serial port missing: check cable, permissions, and dmesg.
 - If build fails after deps change: `./scripts/clean.sh examples/led` then rebuild.
+
+
+## Lifecycle package output
+
+```bash
+./scripts/lifecycle_package.sh examples/led
+```
+
+Dit maakt distributiebestanden in `examples/led/dist/` voor gebruik met `esp32-lifecycle-manager`.
+
+
+## Nieuwe accessory scaffold
+
+```bash
+./scripts/new_example.sh outlet
+```

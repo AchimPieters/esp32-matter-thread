@@ -16,7 +16,12 @@
 - commissioning op Thread netwerk
 - on/off command tests via `chip-tool`
 
-## 4. Regression checklist
+## 4. Release integrity checks
+
+- `./scripts/lifecycle_package.sh examples/led ./keys/lifecycle_private.pem`
+- `./scripts/verify_lifecycle_signature.sh examples/led/dist ./keys/lifecycle_public.pem`
+
+## 5. Regression checklist
 
 - LED toggles betrouwbaar
 - reboot persistence (NVS init)

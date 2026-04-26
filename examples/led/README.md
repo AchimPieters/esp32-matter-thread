@@ -8,6 +8,7 @@ Dit voorbeeld is de minimale maar functionele validatie van `esp32-matter-thread
 - Maakt een **Matter On/Off Light** endpoint
 - Verbindt de Matter `OnOff` attribute met een fysieke LED GPIO
 - Werkt voor active-high en active-low LED wiring
+- Print automatisch QR/Matter onboarding code in serial log na boot
 
 ## Configuratie
 
