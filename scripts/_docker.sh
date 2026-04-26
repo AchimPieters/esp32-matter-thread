@@ -42,6 +42,8 @@ run_idf() {
   docker run --rm "${tty_args[@]}" \
     --security-opt=no-new-privileges \
     -u "$(id -u):$(id -g)" \
+    -e HOME=/tmp/esp-home \
+    -e XDG_CACHE_HOME=/tmp/esp-home/.cache \
     -v "$REPO_ROOT:/workspace" \
     -w "/workspace/$example_path" \
     "$IMAGE_NAME" \
@@ -69,6 +71,8 @@ run_idf_with_device() {
   docker run --rm "${tty_args[@]}" \
     --security-opt=no-new-privileges \
     -u "$(id -u):$(id -g)" \
+    -e HOME=/tmp/esp-home \
+    -e XDG_CACHE_HOME=/tmp/esp-home/.cache \
     --device "$serial_port" \
     -v "$REPO_ROOT:/workspace" \
     -w "/workspace/$example_path" \
