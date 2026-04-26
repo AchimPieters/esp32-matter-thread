@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly REPO_ROOT
 readonly IMAGE_NAME="esp32-matter-thread-idf:latest"
-
-_docker_tty_args() {
-  if [[ -t 0 && -t 1 ]]; then
-    echo "-it"
-  fi
-}
 
 require_docker() {
   if ! command -v docker >/dev/null 2>&1; then
@@ -39,8 +34,12 @@ run_idf() {
 
   validate_example_path "$example_path"
   ensure_image
+  local -a tty_args=()
+  if [[ -t 0 && -t 1 ]]; then
+    tty_args=(-it)
+  fi
 
-  docker run --rm $(_docker_tty_args) \
+  docker run --rm "${tty_args[@]}" \
     --security-opt=no-new-privileges \
     -u "$(id -u):$(id -g)" \
     -v "$REPO_ROOT:/workspace" \
@@ -62,8 +61,12 @@ run_idf_with_device() {
   fi
 
   ensure_image
+  local -a tty_args=()
+  if [[ -t 0 && -t 1 ]]; then
+    tty_args=(-it)
+  fi
 
-  docker run --rm $(_docker_tty_args) \
+  docker run --rm "${tty_args[@]}" \
     --security-opt=no-new-privileges \
     -u "$(id -u):$(id -g)" \
     --device "$serial_port" \
