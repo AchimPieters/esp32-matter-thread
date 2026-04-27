@@ -8,5 +8,5 @@ project(led_matter_accessory)
 if(IDF_VERSION VERSION_LESS "5.4")
     message(FATAL_ERROR
             "Unsupported ESP-IDF version: ${IDF_VERSION}. "
-            "This example requires ESP-IDF >= 5.4 because of esp_matter dependency compatibility.")
+            "This example requires ESP-IDF >= 5.4 and currently targets the 5.4.x dependency set.")
 endif()
