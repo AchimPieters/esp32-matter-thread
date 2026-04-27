@@ -10,6 +10,7 @@ fi
 EXAMPLE_PATH="$1"
 SERIAL_PORT="$2"
 
+# shellcheck source=scripts/_docker.sh
 source "$(dirname "$0")/_docker.sh"
 
 run_idf_with_device "$EXAMPLE_PATH" "$SERIAL_PORT" \

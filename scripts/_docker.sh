@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-readonly IMAGE_NAME="esp32-matter-thread-idf:latest"
-
-_docker_tty_args() {
-  if [[ -t 0 && -t 1 ]]; then
-    echo "-it"
-  fi
-}
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly REPO_ROOT
+readonly LOCAL_IMAGE_NAME="esp32-matter-thread-idf:latest"
+readonly IMAGE_NAME="${IDF_DOCKER_IMAGE:-$LOCAL_IMAGE_NAME}"
 
 require_docker() {
   if ! command -v docker >/dev/null 2>&1; then
@@ -27,9 +23,12 @@ validate_example_path() {
 
 ensure_image() {
   require_docker
-  if ! docker image inspect "$IMAGE_NAME" >/dev/null 2>&1; then
-    echo "[docker] Building image: $IMAGE_NAME"
-    docker build -f "$REPO_ROOT/docker/Dockerfile" -t "$IMAGE_NAME" "$REPO_ROOT"
+  if [[ -n "${IDF_DOCKER_IMAGE:-}" ]]; then
+    return 0
+  fi
+  if ! docker image inspect "$LOCAL_IMAGE_NAME" >/dev/null 2>&1; then
+    echo "[docker] Building image: $LOCAL_IMAGE_NAME"
+    docker build -f "$REPO_ROOT/docker/Dockerfile" -t "$LOCAL_IMAGE_NAME" "$REPO_ROOT"
   fi
 }
 
@@ -39,10 +38,16 @@ run_idf() {
 
   validate_example_path "$example_path"
   ensure_image
+  local -a tty_args=()
+  if [[ -t 0 && -t 1 ]]; then
+    tty_args=(-it)
+  fi
 
-  docker run --rm $(_docker_tty_args) \
+  docker run --rm "${tty_args[@]}" \
     --security-opt=no-new-privileges \
     -u "$(id -u):$(id -g)" \
+    -e HOME=/tmp/esp-home \
+    -e XDG_CACHE_HOME=/tmp/esp-home/.cache \
     -v "$REPO_ROOT:/workspace" \
     -w "/workspace/$example_path" \
     "$IMAGE_NAME" \
@@ -62,10 +67,16 @@ run_idf_with_device() {
   fi
 
   ensure_image
+  local -a tty_args=()
+  if [[ -t 0 && -t 1 ]]; then
+    tty_args=(-it)
+  fi
 
-  docker run --rm $(_docker_tty_args) \
+  docker run --rm "${tty_args[@]}" \
     --security-opt=no-new-privileges \
     -u "$(id -u):$(id -g)" \
+    -e HOME=/tmp/esp-home \
+    -e XDG_CACHE_HOME=/tmp/esp-home/.cache \
     --device "$serial_port" \
     -v "$REPO_ROOT:/workspace" \
     -w "/workspace/$example_path" \

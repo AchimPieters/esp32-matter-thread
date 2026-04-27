@@ -4,6 +4,34 @@
 
 Deze repository is bewust opgezet als **foundation/library component-structuur**, niet als demo-verzameling. Het eerste minimale voorbeeld is een LED-accessoire onder `examples/led`.
 
+## Gebruik als dependency in een externe ESP-IDF repo
+
+Net als `esp32-homekit` kun je deze repository als component-afhankelijkheid gebruiken via de IDF Component Manager.
+
+In jouw project (bijv. `main/idf_component.yml`):
+
+```yaml
+dependencies:
+  achimpieters/esp32-matter-thread: ">=0.1.0"
+```
+
+Daarna kun je in je code direct gebruiken:
+
+```cpp
+#include "esp32_matter_thread.h"
+```
+
+En onboarding (QR + manual code) automatisch printen met:
+
+```cpp
+esp32_matter_thread_config_t cfg = esp32_matter_thread_default_config();
+cfg.accessory_type = ESP32_MATTER_THREAD_ACCESSORY_ON_OFF_LIGHT;
+cfg.primary_gpio = 8;
+cfg.primary_gpio_active_low = false;
+cfg.print_onboarding_codes = true;
+ESP_ERROR_CHECK(esp32_matter_thread_start(&cfg));
+```
+
 ## Doel van deze repository
 
 - Basiscomponent: `esp32_matter_thread`
@@ -17,6 +45,12 @@ Deze repository is bewust opgezet als **foundation/library component-structuur**
 - Toegang tot USB-seriële poort (bijv. `/dev/ttyUSB0`)
 - ESP32-C6 board
 - Voor echte Matter-over-Thread tests: een Thread Border Router
+
+## Ondersteunde ESP-IDF versies
+
+- **Primair ondersteund:** ESP-IDF `5.4.x` (gestabiliseerde `esp_matter==1.4.0` flow)
+- **Ook gevalideerd in CI:** ESP-IDF `6.0`
+- **< 5.4:** niet ondersteund voor deze LED Matter example; de CMake-config geeft een expliciete foutmelding.
 
 > Je hoeft lokaal geen ESP-IDF, Python dependencies of Matter toolchain te installeren.
 
@@ -77,6 +111,7 @@ Extra:
 ./scripts/menuconfig.sh examples/led esp32c6
 ./scripts/clean.sh examples/led
 ./scripts/check_format.sh
+./scripts/quality_gate.sh
 ./scripts/lifecycle_package.sh examples/led
 ./scripts/verify_lifecycle_signature.sh examples/led/dist ./keys/lifecycle_public.pem
 ./scripts/new_example.sh my_accessory
@@ -170,6 +205,14 @@ Deze repository is nu een sterke en bruikbare basis. Voor echte productievolwass
 ## Commissioning
 
 Zie `docs/commissioning.md` voor chip-tool onboarding en command voorbeelden.
+
+## Code audit
+
+Zie `docs/code-audit.md` voor een uitgebreide deep-dive audit en concrete verbeter/roadmap voor volledig automatische consumptie van dit component in andere repositories.
+
+## Maturity scorecard
+
+Zie `docs/maturity-scorecard.md` voor de 100/100 kwaliteitscriteria en status per domein (architectuur/security/operations/maintainability/productvolwassenheid).
 
 ## Testing
 
