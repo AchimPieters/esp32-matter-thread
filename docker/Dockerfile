@@ -1,4 +1,4 @@
-FROM espressif/idf:v6.0
+FROM espressif/idf:v5.4.2
 
 USER root
 RUN apt-get update \
