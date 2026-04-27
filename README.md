@@ -50,7 +50,7 @@ ESP_ERROR_CHECK(esp32_matter_thread_start(&cfg));
 
 - **Primair ondersteund:** ESP-IDF `5.4.x` (CI bouwt met `espressif/idf:v5.4.2` en `esp_matter==1.4.0`).
 - **ESP-IDF `6.0`:** momenteel **experimenteel** in CI (`continue-on-error`), nog niet officieel ondersteund voor de LED example.
-- **< 5.4 of >= 6.0:** niet ondersteund door de huidige LED-example manifest constraints (`idf >=5.4,<6.0`).
+- **< 5.4:** niet ondersteund door de huidige LED-example minimumconstraint (`idf >=5.4`).
 
 > Je hoeft lokaal geen ESP-IDF, Python dependencies of Matter toolchain te installeren.
 

@@ -69,7 +69,7 @@ jobs:
         run: |
           if [[ "${{ matrix.experimental }}" == "true" ]]; then
             echo "ESP-IDF v6.0 is currently experimental for this repository."
-            echo "The LED example manifest intentionally supports IDF >=5.4,<6.0."
+            echo "The LED example manifest supports IDF >=5.4; v6.0 remains experimental in CI."
           else
             echo "ESP-IDF v5.4.2 is the primary supported CI target."
           fi
