@@ -1,10 +1,7 @@
 /*
- * Compatibility shim component for ESP-IDF v6+ where legacy 'json'
- * component name is no longer available as built-in.
+ * ESP-IDF v6 removed the legacy component name "json".
+ * Some esp_matter versions still require a component called "json".
  *
- * This component intentionally provides no runtime logic and only exists
- * to satisfy component dependency resolution for third-party components
- * that still require a component named "json".
+ * This shim restores that component name and forwards to built-in `cjson`.
  */
-
-void esp32_matter_thread_json_shim_keep_compiler_happy(void) {}
+void esp32_matter_thread_json_component_shim(void) {}

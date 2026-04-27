@@ -25,7 +25,15 @@ The format is based on Keep a Changelog.
 - `docs/maturity-scorecard.md` with explicit 100/100 quality criteria/status.
 
 ### Changed
+<<<<<<< achimpieters/automate-code-audit-with-repo-integration-tacqqb
+- Updated LED example/component manifests for ESP-IDF v5.4.x (`idf >= 5.4`) and pinned `espressif/esp_matter` to `1.4.0`.
+- Added back `components/json` compatibility shim (backed by built-in `cjson`) for ESP-IDF v6.0 compatibility with legacy `esp_matter` dependency naming.
+- Removed obsolete `CONFIG_CHIP_ENABLE_OPENTHREAD` from `examples/led/sdkconfig.defaults`.
+- Updated Docker ESP-IDF base image to `espressif/idf:v5.4.2`.
+- CI now builds `examples/led` in a matrix for `espressif/idf:v5.4.2` and `espressif/idf:v6.0`.
+=======
 - Updated LED example/component manifests for ESP-IDF v6.0 (`idf >= 6.0`) and latest `espressif/esp_matter`.
 - Added `components/json` compatibility shim for ESP-IDF v6.x builds where legacy `json` component name is missing.
 - Removed obsolete `CONFIG_CHIP_ENABLE_OPENTHREAD` from `examples/led/sdkconfig.defaults`.
 - Updated Docker ESP-IDF base image to `espressif/idf:v5.4.2` for CI/runtime alignment.
+>>>>>>> main

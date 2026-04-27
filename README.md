@@ -46,6 +46,12 @@ ESP_ERROR_CHECK(esp32_matter_thread_start(&cfg));
 - ESP32-C6 board
 - Voor echte Matter-over-Thread tests: een Thread Border Router
 
+## Ondersteunde ESP-IDF versies
+
+- **Primair ondersteund:** ESP-IDF `5.4.x` (gestabiliseerde `esp_matter==1.4.0` flow)
+- **Ook gevalideerd in CI:** ESP-IDF `6.0`
+- **< 5.4:** niet ondersteund voor deze LED Matter example; de CMake-config geeft een expliciete foutmelding.
+
 > Je hoeft lokaal geen ESP-IDF, Python dependencies of Matter toolchain te installeren.
 
 ## Repositorystructuur

@@ -54,10 +54,14 @@ Voor losse stappen:
 
 Voor volledige end-to-end tests heb je een Thread Border Router nodig.
 
-## ESP-IDF v6.0 compatibiliteit
+## ESP-IDF compatibiliteit
 
-Deze example is ingesteld voor ESP-IDF v6.0 (`idf >= 6.0`) en gebruikt de nieuwste beschikbare `espressif/esp_matter` via de component manager.
-Voor compatibiliteit met oudere `esp_matter` dependency-namen bevat deze repository ook een lokale `components/json` shim-component.
+Deze example gebruikt:
+
+- `idf >= 5.4`
+- `espressif/esp_matter == 1.4.0`
+
+Dit is de gestabiliseerde combinatie voor CI (`5.4.2`) en werkt ook met IDF `6.0` dankzij de lokale `components/json` compat-shim.
 
 Aanbevolen schone build-sequentie:
 

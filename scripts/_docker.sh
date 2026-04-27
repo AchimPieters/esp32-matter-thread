@@ -3,7 +3,8 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 readonly REPO_ROOT
-readonly IMAGE_NAME="esp32-matter-thread-idf:latest"
+readonly LOCAL_IMAGE_NAME="esp32-matter-thread-idf:latest"
+readonly IMAGE_NAME="${IDF_DOCKER_IMAGE:-$LOCAL_IMAGE_NAME}"
 
 require_docker() {
   if ! command -v docker >/dev/null 2>&1; then
@@ -22,9 +23,12 @@ validate_example_path() {
 
 ensure_image() {
   require_docker
-  if ! docker image inspect "$IMAGE_NAME" >/dev/null 2>&1; then
-    echo "[docker] Building image: $IMAGE_NAME"
-    docker build -f "$REPO_ROOT/docker/Dockerfile" -t "$IMAGE_NAME" "$REPO_ROOT"
+  if [[ -n "${IDF_DOCKER_IMAGE:-}" ]]; then
+    return 0
+  fi
+  if ! docker image inspect "$LOCAL_IMAGE_NAME" >/dev/null 2>&1; then
+    echo "[docker] Building image: $LOCAL_IMAGE_NAME"
+    docker build -f "$REPO_ROOT/docker/Dockerfile" -t "$LOCAL_IMAGE_NAME" "$REPO_ROOT"
   fi
 }
 
