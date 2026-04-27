@@ -23,3 +23,7 @@ The format is based on Keep a Changelog.
   - `esp32_matter_thread_start_on_off_light()`
 - `scripts/quality_gate.sh` for one-command local quality checks.
 - `docs/maturity-scorecard.md` with explicit 100/100 quality criteria/status.
+
+### Changed
+- Pinned `espressif/esp_matter` to `1.4.0` for LED example/component compatibility with ESP-IDF v5.4.2.
+- Removed obsolete `CONFIG_CHIP_ENABLE_OPENTHREAD` from `examples/led/sdkconfig.defaults`.

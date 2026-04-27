@@ -23,16 +23,45 @@ Defaults staan in `sdkconfig.defaults`:
 - `CONFIG_EXAMPLE_LED_GPIO=8`
 - `CONFIG_EXAMPLE_LED_ACTIVE_LOW=n`
 
-## Build en flash
+## Build en flash (Optie A: direct in `examples/led`)
 
-Vanaf repository root:
+Ga naar deze map en gebruik direct `idf.py`:
 
 ```bash
-./scripts/build.sh examples/led esp32c6
-./scripts/flash.sh examples/led /dev/ttyUSB0
-./scripts/monitor.sh /dev/ttyUSB0 examples/led
+cd examples/led
+idf.py set-target esp32c6
+idf.py build
+idf.py -p /dev/ttyUSB0 flash
+idf.py -p /dev/ttyUSB0 monitor
+```
+
+Of gebruik de lokale helper:
+
+```bash
+cd examples/led
+./noob.sh all /dev/ttyUSB0 esp32c6
+```
+
+Voor losse stappen:
+
+```bash
+./noob.sh build "" esp32c6
+./noob.sh flash /dev/ttyUSB0
+./noob.sh monitor /dev/ttyUSB0
 ```
 
 ## Matter over Thread
 
 Voor volledige end-to-end tests heb je een Thread Border Router nodig.
+
+## ESP-IDF v5.4.2 compatibiliteit
+
+Deze example pint `espressif/esp_matter` op `1.4.0` in `main/idf_component.yml` om compatibel te bouwen op ESP-IDF v5.4.2 voor `esp32c6`.
+
+Aanbevolen schone build-sequentie:
+
+```bash
+idf.py fullclean
+idf.py set-target esp32c6
+idf.py build
+```

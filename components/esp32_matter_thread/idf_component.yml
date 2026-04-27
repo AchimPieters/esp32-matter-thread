@@ -5,4 +5,4 @@ repository: "https://github.com/AchimPieters/esp32-matter-thread.git"
 license: "MIT"
 dependencies:
   idf: ">=5.2"
-  espressif/esp_matter: "*"
+  espressif/esp_matter: "==1.4.0"
