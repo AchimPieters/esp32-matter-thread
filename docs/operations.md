@@ -10,6 +10,7 @@
 
 ```bash
 ./scripts/doctor.sh /dev/ttyUSB0
+./scripts/quality_gate.sh
 ```
 
 ## Build / Flash / Monitor

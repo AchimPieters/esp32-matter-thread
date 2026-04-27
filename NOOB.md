@@ -36,12 +36,18 @@ Je moet mapnamen zien zoals `examples`, `scripts`, `docker`.
 
 ---
 
-## 2) Preflight check
+## 2) Naar LED voorbeeld-map gaan (Optie A)
+
+```bash
+cd examples/led
+```
+
+## 3) Preflight check
 
 Run:
 
 ```bash
-./scripts/doctor.sh
+../../scripts/doctor.sh
 ```
 
 Als dit faalt met `docker not found`:
@@ -51,19 +57,20 @@ Als dit faalt met `docker not found`:
 
 ---
 
-## 3) Bouw de firmware (LED voorbeeld)
+## 4) Bouw de firmware (LED voorbeeld)
 
 Run:
 
 ```bash
-./scripts/build.sh examples/led esp32c6
+idf.py set-target esp32c6
+idf.py build
 ```
 
 Wacht tot de build klaar is.
 
 ---
 
-## 4) Zoek je seriële poort
+## 5) Zoek je seriële poort
 
 ### Linux
 
@@ -81,12 +88,12 @@ Kies de juiste poort (voorbeeld: `/dev/ttyUSB0` of `/dev/cu.usbserial-0001`).
 
 ---
 
-## 5) Flash naar ESP32-C6
+## 6) Flash naar ESP32-C6
 
 Gebruik jouw poort:
 
 ```bash
-./scripts/flash.sh examples/led /dev/ttyUSB0
+idf.py -p /dev/ttyUSB0 flash
 ```
 
 Als flash faalt:
@@ -95,10 +102,10 @@ Als flash faalt:
 
 ---
 
-## 6) Open serial monitor
+## 7) Open serial monitor
 
 ```bash
-./scripts/monitor.sh /dev/ttyUSB0 examples/led
+idf.py -p /dev/ttyUSB0 monitor
 ```
 
 In de logs moet je o.a. onboarding info zien:
@@ -109,7 +116,7 @@ Laat deze terminal open.
 
 ---
 
-## 7) Koppelen met iPhone (Apple Home)
+## 8) Koppelen met iPhone (Apple Home)
 
 1. Open **Woning (Home)** app.
 2. Tik op **+** → **Voeg accessoire toe**.
@@ -120,7 +127,7 @@ Laat deze terminal open.
 
 ---
 
-## 8) Testen of het werkt
+## 9) Testen of het werkt
 
 In Home app:
 - Zet lamp **aan** → LED moet aan.
@@ -131,12 +138,12 @@ Als omgekeerd gedrag:
 
 ---
 
-## 9) LED GPIO veranderen (optioneel)
+## 10) LED GPIO veranderen (optioneel)
 
 Run:
 
 ```bash
-./scripts/menuconfig.sh examples/led esp32c6
+idf.py menuconfig
 ```
 
 Ga naar:
@@ -147,7 +154,7 @@ Sla op, build opnieuw, flash opnieuw.
 
 ---
 
-## 10) Snelle foutoplossing
+## 11) Snelle foutoplossing
 
 - **docker not found** → Docker installeren.
 - **serial port not found** → andere kabel/poort proberen.
@@ -158,15 +165,17 @@ Zie ook: `docs/troubleshooting.md`.
 
 ---
 
-## 11) Volledige beginner workflow (copy/paste)
+## 12) Volledige beginner workflow (copy/paste)
 
 > Vervang `/dev/ttyUSB0` door jouw poort.
 
 ```bash
-./scripts/doctor.sh
-./scripts/build.sh examples/led esp32c6
-./scripts/flash.sh examples/led /dev/ttyUSB0
-./scripts/monitor.sh /dev/ttyUSB0 examples/led
+cd examples/led
+../../scripts/doctor.sh
+idf.py set-target esp32c6
+idf.py build
+idf.py -p /dev/ttyUSB0 flash
+idf.py -p /dev/ttyUSB0 monitor
 ```
 
 Daarna: koppelen in iPhone Home app.

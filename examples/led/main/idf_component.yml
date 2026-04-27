@@ -1,2 +1,2 @@
 dependencies:
-  espressif/esp_matter: "*"
+  espressif/esp_matter: "==1.4.0"
