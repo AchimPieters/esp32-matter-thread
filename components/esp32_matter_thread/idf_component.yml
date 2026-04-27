@@ -6,3 +6,4 @@ license: "MIT"
 dependencies:
   idf: ">=6.0"
   espressif/esp_matter: "*"
+  espressif/cjson: "*"

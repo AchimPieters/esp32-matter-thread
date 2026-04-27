@@ -57,6 +57,7 @@ Voor volledige end-to-end tests heb je een Thread Border Router nodig.
 ## ESP-IDF v6.0 compatibiliteit
 
 Deze example is ingesteld voor ESP-IDF v6.0 (`idf >= 6.0`) en gebruikt de nieuwste beschikbare `espressif/esp_matter` via de component manager.
+Voor compatibiliteit met oudere `esp_matter` dependency-namen bevat deze repository ook een lokale `components/json` shim-component.
 
 Aanbevolen schone build-sequentie:
 

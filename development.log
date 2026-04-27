@@ -44,6 +44,7 @@ Doel van dit bestand:
 - [x] Legacy Kconfig cleanup: obsolete `CONFIG_CHIP_ENABLE_OPENTHREAD` verwijderd.
 - [x] Toolchain gealigneerd naar ESP-IDF v6.0 (`docker`, component manifests, example manifest).
 - [x] CI docker build job tijdelijk `continue-on-error` gezet tijdens IDF v6.0 migratie.
+- [x] `json` compat shim toegevoegd (`components/json`) voor ESP-IDF v6.x + esp_matter dependency-compatibiliteit.
 ## Nog te doen (backlog)
 
 ### Prioriteit hoog
