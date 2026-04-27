@@ -1,0 +1,8 @@
+version: "0.1.0"
+description: "Reusable ESP32 Matter+Thread foundation component with QR onboarding helper and LED driver"
+url: "https://github.com/AchimPieters/esp32-matter-thread"
+repository: "https://github.com/AchimPieters/esp32-matter-thread.git"
+license: "MIT"
+dependencies:
+  idf: ">=6.0"
+  espressif/esp_matter: "*"

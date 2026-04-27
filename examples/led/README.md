@@ -5,6 +5,7 @@ Dit voorbeeld is de minimale maar functionele validatie van `esp32-matter-thread
 ## Functionaliteit
 
 - Initialiseert ESP-Matter + NVS
+- Doet dit volledig via `#include "esp32_matter_thread.h"` + `esp32_matter_thread_start(...)`
 - Maakt een **Matter On/Off Light** endpoint
 - Verbindt de Matter `OnOff` attribute met een fysieke LED GPIO
 - Werkt voor active-high en active-low LED wiring
@@ -22,16 +23,45 @@ Defaults staan in `sdkconfig.defaults`:
 - `CONFIG_EXAMPLE_LED_GPIO=8`
 - `CONFIG_EXAMPLE_LED_ACTIVE_LOW=n`
 
-## Build en flash
+## Build en flash (Optie A: direct in `examples/led`)
 
-Vanaf repository root:
+Ga naar deze map en gebruik direct `idf.py`:
 
 ```bash
-./scripts/build.sh examples/led esp32c6
-./scripts/flash.sh examples/led /dev/ttyUSB0
-./scripts/monitor.sh /dev/ttyUSB0 examples/led
+cd examples/led
+idf.py set-target esp32c6
+idf.py build
+idf.py -p /dev/ttyUSB0 flash
+idf.py -p /dev/ttyUSB0 monitor
+```
+
+Of gebruik de lokale helper:
+
+```bash
+cd examples/led
+./noob.sh all /dev/ttyUSB0 esp32c6
+```
+
+Voor losse stappen:
+
+```bash
+./noob.sh build "" esp32c6
+./noob.sh flash /dev/ttyUSB0
+./noob.sh monitor /dev/ttyUSB0
 ```
 
 ## Matter over Thread
 
 Voor volledige end-to-end tests heb je een Thread Border Router nodig.
+
+## ESP-IDF v6.0 compatibiliteit
+
+Deze example is ingesteld voor ESP-IDF v6.0 (`idf >= 6.0`) en gebruikt de nieuwste beschikbare `espressif/esp_matter` via de component manager.
+
+Aanbevolen schone build-sequentie:
+
+```bash
+idf.py fullclean
+idf.py set-target esp32c6
+idf.py build
+```
