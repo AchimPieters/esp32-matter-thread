@@ -4,5 +4,6 @@ url: "https://github.com/AchimPieters/esp32-matter-thread"
 repository: "https://github.com/AchimPieters/esp32-matter-thread.git"
 license: "MIT"
 dependencies:
-  idf: ">=5.2"
-  espressif/esp_matter: "==1.4.0"
+  idf: ">=6.0"
+  espressif/esp_matter: "*"
+  espressif/cjson: "*"
