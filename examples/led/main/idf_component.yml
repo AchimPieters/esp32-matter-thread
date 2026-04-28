@@ -1,7 +1,7 @@
 dependencies:
   idf: ">=5.4"
   espressif/cjson: "^1.7.19"
-  # 1.4.0 avoids known build breaks with newer toolchains/dependency resolution
-  # (mbedtls include path in esp_encrypted_img and C++ optional equality in closure-control).
   espressif/esp_matter: "==1.4.0"
+  # Override transitive esp_matter pin (esp_encrypted_img 2.1.0) with an IDF 5.4-compatible release.
+  espressif/esp_encrypted_img: "^2.7.0"
   espressif/mqtt: "*"

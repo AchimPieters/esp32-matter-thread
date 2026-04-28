@@ -6,6 +6,7 @@ license: "MIT"
 dependencies:
   idf: ">=5.4"
   espressif/cjson: "^1.7.19"
-  # Keep esp_matter pinned to 1.4.0 to match the lockfile/toolchain-compatible set.
   espressif/esp_matter: "==1.4.0"
+  # Override transitive esp_matter pin (esp_encrypted_img 2.1.0) with an IDF 5.4-compatible release.
+  espressif/esp_encrypted_img: "^2.7.0"
   espressif/mqtt: "*"

@@ -60,6 +60,7 @@ Deze example gebruikt:
 
 - `idf >= 5.4, < 6.0`
 - `espressif/esp_matter == 1.4.0`
+- `espressif/esp_encrypted_img >= 2.7.0` (directe override om oude transitive `2.1.0` incompatibiliteit met MbedTLS layout te vermijden)
 - lokale `components/json` shim (REQUIRES `cjson`) + `espressif/mqtt` voor ESP-IDF 6.0 compatibiliteit
 Dit is de gestabiliseerde combinatie voor CI (`espressif/idf:v5.4.2`). ESP-IDF `6.0` staat in CI als experimenteel/allowed-failure totdat een aparte, bewezen compatibele dependencyset is vastgelegd.
 
