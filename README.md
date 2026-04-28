@@ -48,7 +48,7 @@ ESP_ERROR_CHECK(esp32_matter_thread_start(&cfg));
 
 ## Ondersteunde ESP-IDF versies
 
-- **Primair ondersteund:** ESP-IDF `5.4.x` (CI bouwt met `espressif/idf:v5.4.2`, `esp_matter==1.4.0` en directe `esp_encrypted_img>=2.7.0` override).
+- **Primair ondersteund:** ESP-IDF `5.4.x` (CI bouwt met `espressif/idf:v5.4.2`, `esp_matter==1.4.0` en lokale compat-override voor `esp_encrypted_img@2.1.0`).
 - **ESP-IDF `6.0`:** experimenteel in CI; gebruikt een lokale compat component `components/json` (backed by `cjson`) en managed `espressif/mqtt` voor legacy dependency-naamresolutie in deze buildflow.
 - **< 5.4:** niet ondersteund door de huidige LED-example minimumconstraint (`idf >=5.4`).
 
