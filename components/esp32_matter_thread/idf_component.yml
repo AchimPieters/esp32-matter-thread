@@ -7,8 +7,4 @@ dependencies:
   idf: ">=5.4"
   espressif/cjson: "^1.7.19"
   espressif/esp_matter: "==1.4.0"
-  # Keep esp_matter's strict esp_encrypted_img@2.1.0 dependency, but use a local compatibility override.
-  espressif/esp_encrypted_img:
-    version: "2.1.0"
-    override_path: "../esp_encrypted_img_compat"
   espressif/mqtt: "*"

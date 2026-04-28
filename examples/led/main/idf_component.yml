@@ -5,5 +5,5 @@ dependencies:
   # Keep esp_matter's strict esp_encrypted_img@2.1.0 dependency, but use a local compatibility override.
   espressif/esp_encrypted_img:
     version: "2.1.0"
-    override_path: "../../../components/esp_encrypted_img_compat"
+    override_path: "../components/esp_encrypted_img_compat"
   espressif/mqtt: "*"

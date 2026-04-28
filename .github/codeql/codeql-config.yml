@@ -3,4 +3,4 @@ name: "Repo CodeQL config"
 # Ignore vendored third-party compatibility code that mirrors upstream component
 # implementation and is only used as a local override for dependency resolution.
 paths-ignore:
-  - components/esp_encrypted_img_compat
+  - examples/led/components/esp_encrypted_img_compat
