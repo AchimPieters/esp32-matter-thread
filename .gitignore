@@ -72,6 +72,10 @@ sdkconfig
 sdkconfig.old
 managed_components/
 dependencies.lock
+# Track the LED example lock file so CI gets reproducible esp_matter 1.4.0
+# (base version, no ~N patch) and avoids components published after initial
+# local resolution (e.g. 1.4.0~1 which adds ClosureControl lacking operator==)
+!examples/led/dependencies.lock
 
 # Keep project progress log
 !development.log
