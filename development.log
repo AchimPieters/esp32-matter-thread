@@ -41,16 +41,13 @@ Doel van dit bestand:
 - [x] Extra one-call helper toegevoegd: `esp32_matter_thread_start_on_off_light(...)`.
 - [x] Quality gate script toegevoegd (`scripts/quality_gate.sh`) voor snelle lokale kwaliteitsvalidatie.
 - [x] Maturity scorecard toegevoegd met 100/100 criteria (`docs/maturity-scorecard.md`).
-<<<<<<< achimpieters/automate-code-audit-with-repo-integration-tacqqb
 - [x] Legacy Kconfig cleanup: obsolete `CONFIG_CHIP_ENABLE_OPENTHREAD` verwijderd.
 - [x] Toolchain gealigneerd naar ESP-IDF v5.4.2 (`docker`, component manifests, example manifest).
-- [x] `esp_matter` dependency vastgezet op `1.4.0` voor stabielere CI-builds op IDF v5.4.x.
-- [x] `json` compat shim toegevoegd met `REQUIRES cjson` (geen `espressif__cjson` dependency).
+- [x] `esp_matter` dependency gepind op `1.4.2~1` voor stabielere CI-builds op IDF v5.4.x.
+- [x] Lokale `json` compat shim toegevoegd met `REQUIRES cjson`.
+- [x] Managed `espressif/mqtt` dependency toegevoegd voor IDF v6.0 componentresolutie.
 - [x] CI matrix toegevoegd voor Docker builds op IDF `5.4.2` en `6.0`.
-=======
-- [x] ESP-IDF v5.4.2 buildfix: `esp_matter` gepind op `1.4.0` + obsolete `CONFIG_CHIP_ENABLE_OPENTHREAD` verwijderd.
-- [x] Docker basisimage geüpdatet naar `espressif/idf:v5.4.2` voor CI/build alignment.
->>>>>>> main
+
 ## Nog te doen (backlog)
 
 ### Prioriteit hoog

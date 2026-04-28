@@ -61,13 +61,10 @@ idf.py build
 
 ### `Failed to resolve component 'json' required by 'espressif__esp_matter'`
 - Dit treedt op bij ESP-IDF 6.0 in flows waar `json`/`mqtt` niet als klassieke built-ins resolve-en.
-- Fix in deze repo: expliciete managed dependencies toegevoegd:
-  - `espressif/json: "*"`
-  - `espressif/mqtt: "*"`
-- Toegepast in:
-  - `examples/led/main/idf_component.yml`
-  - `components/esp32_matter_thread/idf_component.yml`
+- Fix in deze repo:
+  - lokale component-shim `components/json/CMakeLists.txt` met `idf_component_register(REQUIRES cjson)`
+  - managed dependency `espressif/mqtt` in manifests
 
 ### `Component directory .../idf/components/mqtt does not contain a CMakeLists.txt`
 - Dit is hetzelfde root-cause cluster als hierboven: componentnaam-resolutie op IDF 6.0.
-- Gebruik managed `espressif/mqtt` dependency i.p.v. te vertrouwen op een legacy built-in map.
+- Gebruik managed `espressif/mqtt` dependency i.p.v. te vertrouwen op een legacy built-in map; `json` wordt lokaal gealiast via `components/json`.
