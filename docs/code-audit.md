@@ -1,174 +1,169 @@
-# Code Audit — esp32-matter-thread (deep dive)
+# Code Audit — esp32-matter-thread (feitelijk, zonder aannames)
 
-Datum audit: 2026-04-26
+Datum audit: 2026-04-28
+Audit uitgevoerd op lokale checkout in `/workspace/esp32-matter-thread`.
 
 ## Executive summary
 
-De repository heeft een goede basisarchitectuur (component + voorbeeld + scripts + docs), maar voor het doel **“één dependency toevoegen en dan automatisch kunnen bouwen/includen/commissionen inclusief QR-output”** waren er nog drie kernhiaten:
+Deze repository heeft een consistente basis voor een herbruikbare ESP-Matter component met een LED example. Op basis van direct verifieerbare checks zijn de volgende feiten vastgesteld:
 
-1. Geen component-manifest op componentniveau voor publicatie/consumptie.
-2. QR/onboarding en NVS-init zaten in het voorbeeld i.p.v. in herbruikbare library-API.
-3. Onboarding-flow voor externe consumer-repo stond niet als expliciet recept in de docs.
+1. **Statische kwaliteitschecks die in-repo beschikbaar zijn slagen lokaal** (`bash -n`, `check_format`, `quality_gate`).
+2. **End-to-end build/flash is in deze omgeving niet geverifieerd**, omdat Docker ontbreekt (`./scripts/doctor.sh` faalt expliciet op docker check).
+3. **De kerncode is klein, coherent en API-gedreven**: de publieke API in `include/` sluit aan op de implementatie in `src/`, en het LED voorbeeld gebruikt die API in plaats van duplicaatlogica.
+4. **Documentatie is breed aanwezig** (architectuur, operations, testing, commissioning, troubleshooting, security), maar hardware-werkzaamheid kan alleen feitelijk bewezen worden met build + board-run logs buiten deze omgeving.
 
-Deze audit heeft die drie punten concreet geadresseerd.
+## Scope
 
----
+Gelezen en gecontroleerd:
 
-## Scope en methode
+- Component API/implementatie:
+  - `components/esp32_matter_thread/include/esp32_matter_thread.h`
+  - `components/esp32_matter_thread/src/esp32_matter_thread.cpp`
+  - `components/esp32_matter_thread/idf_component.yml`
+- Example:
+  - `examples/led/main/main.cpp`
+  - `examples/led/main/idf_component.yml`
+  - `examples/led/README.md`
+- Proces/scripts/docs:
+  - `scripts/quality_gate.sh`
+  - `scripts/check_format.sh`
+  - `scripts/doctor.sh`
+  - `docs/testing.md`
+  - `README.md`
 
-Geanalyseerd:
+## Uitgevoerde verificaties (met uitkomst)
 
-- `components/esp32_matter_thread/*`
-- `examples/led/main/*`
-- `README.md`
-- relevante documentatie in `docs/`
+### 1) Shell syntax
 
-Audit uitgevoerd op:
+Command:
 
-- herbruikbaarheid als dependency
-- build/dependency-chain
-- API-surface en encapsulatie
-- commissioning ergonomie (QR/manual code)
-- maintainability/documentatie
+```bash
+bash -n scripts/*.sh
+```
 
----
+Resultaat: **geslaagd** (exit code 0, geen output).
 
-## Bevindingen (voor de fix)
+### 2) Repository quality gate
 
-## 1) Dependency-consumptie was impliciet, niet publish-ready
+Command:
 
-- In `examples/led/main/idf_component.yml` stond alleen `espressif/esp_matter`.
-- Er bestond nog geen `idf_component.yml` in `components/esp32_matter_thread/`.
+```bash
+./scripts/quality_gate.sh
+```
 
-Impact:
+Resultaat: **geslaagd** met expliciete PASS:
 
-- Moeilijk om deze repo/component op dezelfde DX-manier te consumeren als `esp32-homekit` (“dependency in yml + include + klaar”).
+- `[quality] shell syntax`
+- `[quality] code format`
+- `Format check passed`
+- `[quality] required docs`
+- `[quality] required component files`
+- `[quality] PASS`
 
-## 2) Onboarding code generatie zat op app-niveau
+### 3) Omgevings-preflight
 
-- QR/manual code printen stond in `examples/led/main/main.cpp`.
-- NVS recovery-init stond ook alleen in dat example.
+Command:
 
-Impact:
+```bash
+./scripts/doctor.sh
+```
 
-- Externe gebruikers moeten boilerplate kopiëren i.p.v. library-functies aanroepen.
+Resultaat: **niet geslaagd in deze omgeving**:
 
-## 3) Onboarding naar externe repo niet expliciet gedocumenteerd
+- `[doctor] Checking docker`
+- `[fail] docker not found`
 
-- README beschreef vooral interne buildflow.
+Feitelijke consequentie: Dockerized `idf.py build` flow uit scripts is hier niet uitvoerbaar/geverifieerd.
 
-Impact:
+### 4) Extra static tooling check
 
-- Onnodige instapfrictie voor users die dit als component willen “inpluggen”.
+Command:
 
----
-
-## Doorgevoerde verbeteringen
-
-## A) Component manifest toegevoegd
-
-Nieuw bestand:
-
-- `components/esp32_matter_thread/idf_component.yml`
-
-Met metadata + dependencies:
-
-- `idf >= 5.2`
-- `espressif/esp_matter`
-
-Resultaat:
-
-- Component is voorbereid op managed-dependency consumptie in externe ESP-IDF projecten.
-
-## B) Herbruikbare onboarding/NVS API toegevoegd
-
-Nieuwe publieke API in `esp32_matter_thread.h`:
-
-- `esp32_matter_thread_init_nvs()`
-- `esp32_matter_thread_print_onboarding_codes_thread()`
-- `esp32_matter_thread_default_config()`
-- `esp32_matter_thread_start()`
-- `esp32_matter_thread_start_on_off_light()`
-
-Geïmplementeerd in `esp32_matter_thread.cpp`:
-
-- NVS init + recovery flow (NO_FREE_PAGES / NEW_VERSION_FOUND)
-- Matter Thread onboarding code print (QR + manual via `PrintOnboardingCodes`)
+```bash
+./scripts/check_format.sh && shellcheck scripts/*.sh
+```
 
 Resultaat:
 
-- Minder duplicatie.
-- Betere DX in externe projecten: minder setupcode, sneller “it works”.
+- `Format check passed`
+- daarna: `/bin/bash: line 1: shellcheck: command not found`
 
-## C) LED example gemigreerd naar de nieuwe library API
+Feitelijke consequentie: format-check is uitvoerbaar en groen; shellcheck-resultaten zijn in deze omgeving niet te reproduceren.
 
-In `examples/led/main/main.cpp`:
+## Feitelijke code-analyse
 
-- lokale helperfuncties verwijderd
-- library helperfuncties gebruikt
+### API en implementatie sluiten op elkaar aan
 
-Resultaat:
+- Header definieert compacte publieke API voor:
+  - LED driver init/set/get
+  - NVS init met recovery
+  - onboarding code print
+  - default config
+  - generieke `start(...)`
+  - convenience `start_on_off_light(...)`
+- Implementatie bevat voor elk publiek API-element een concrete implementatie met error handling via `ESP_RETURN_ON_ERROR` waar relevant.
 
-- Example laat nu de gewenste consumptiepatroon zien.
+### LED-flow en Matter callback-koppeling
 
-## D) README uitgebreid met expliciete consumer-flow
+- `matter_attribute_update_cb(...)` verwerkt alleen de verwachte PRE_UPDATE voor OnOff-attribuut en schrijft dan LED state via `esp32_matter_thread_led_set(...)`.
+- GPIO init valideert output-pin en zet initiële fysieke staat op `off`.
+- `physical_level(...)` verwerkt active-high/active-low mapping deterministisch.
 
-Toegevoegd:
+### Startflow en state-guards
 
-- hoe dependency in `idf_component.yml` te zetten
-- include voorbeeld
-- automatische onboarding helper-aanroep
-- verwijzing naar deze audit
+- `esp32_matter_thread_start(...)` valideert null-config en beschermt tegen dubbel starten met `s_started`.
+- NVS init met fallback erase+reinit bij bekende versie/page fouten is aanwezig.
+- Alleen ondersteund accessoiretype (`ON_OFF_LIGHT`) wordt geaccepteerd; onbekende typen geven `ESP_ERR_NOT_SUPPORTED`.
 
----
+### Example gebruikt library API correct
 
-## Repro/doelbeeld: “zoals esp32-homekit, maar dan met esp32-matter-thread”
+- `examples/led/main/main.cpp` roept uitsluitend de library convenience API aan:
+  - `esp32_matter_thread_start_on_off_light(CONFIG_EXAMPLE_LED_GPIO, CONFIG_EXAMPLE_LED_ACTIVE_LOW, true)`
+- Dit ondersteunt het doel van een herbruikbare component zonder app-level boilerplate.
 
-In een nieuwe ESP-IDF app:
+## Feitelijke beperkingen van deze audit
 
-1. Voeg dependency toe:
-   ```yaml
-   dependencies:
-     achimpieters/esp32-matter-thread: ">=0.1.0"
-   ```
-2. Gebruik in code:
-   ```cpp
-   #include "esp32_matter_thread.h"
-   ```
-3. In `app_main()`:
-   ```cpp
-   esp32_matter_thread_config_t cfg = esp32_matter_thread_default_config();
-   cfg.accessory_type = ESP32_MATTER_THREAD_ACCESSORY_ON_OFF_LIGHT;
-   cfg.primary_gpio = 8;
-   ESP_ERROR_CHECK(esp32_matter_thread_start(&cfg));
-   ```
+Deze audit claimt **niet** dat hardware commissioning werkt in deze specifieke runtime, omdat de noodzakelijke prerequisites ontbreken:
 
-Bij startup worden onboarding payloads (QR/manual) in serial output geprint.
+- Geen Docker beschikbaar in audit-omgeving (hard fail in `doctor.sh`).
+- Geen fysieke ESP32-C6 + seriële poortverificatie uitgevoerd.
+- Geen `chip-tool` commissioning-run hier uitgevoerd.
 
----
+Daarmee is “werkt op echte hardware” in deze sessie **niet bewezen**, maar ook **niet ontkracht**; alleen de lokaal verifieerbare statische/structurele kwaliteit is bewezen.
 
-## Rest-risico’s en aanbevolen vervolgstappen
+## Aanbevolen vervolgstappen (bewijsgericht)
 
-1. **Registry publicatie**  
-   Verifieer component-naam/namespace in ESP Registry zodat `achimpieters/esp32-matter-thread` resolvable is.
-
-2. **Semver/releases**  
-   Publiceer getagde release (`v0.1.0` of hoger) met changelog-entry zodat versieconstraint direct bruikbaar is.
-
-3. **Hardware E2E bewijs**  
-   Voeg aantoonbare commissioning testresultaten toe (CI artifact/log of testprotocol).
-
-4. **API uitbreiding (optioneel)**  
-   Overweeg één hogere-level bootstrap helper die NVS, node init en onboarding print bundelt.
-
----
+1. Voer in een Docker-capabele omgeving uit:
+   - `./scripts/build.sh examples/led esp32c6`
+2. Voer op echte hardware uit:
+   - `./scripts/flash.sh examples/led <serial_port>`
+   - `./scripts/monitor.sh <serial_port> examples/led`
+3. Leg commissioning-bewijs vast:
+   - serial log met onboarding payload (QR/manual)
+   - `chip-tool` command transcript voor on/off toggles
+4. Voeg die outputs toe als artifact in CI of als testbewijs in `docs/testing.md`.
 
 ## Conclusie
 
-Na deze wijzigingen is de repo significant dichter bij het gewenste “plug-and-play als dependency”-model:
+Feitelijk vastgesteld op 2026-04-28:
 
-- publish-ready component manifest aanwezig
-- onboarding/QR functionaliteit herbruikbaar als library-API
-- voorbeeld en docs tonen nu de automatische flow expliciet
+- **Codebasis en lokale quality gate zijn consistent en groen.**
+- **Werkzaamheid op board/runtime is in deze omgeving niet verifieerbaar door ontbrekende tooling (Docker) en hardware.**
+- **De repository is technisch goed voorbereid op hergebruik als component, met realistische volgende stap: reproduceerbaar build + hardware bewijs toevoegen.**
 
-Voor 100% einddoel resteert voornamelijk publicatie/versiebeheer in de component registry en hardware-validatie.
+
+## Antwoord op de vraag “is de repro volledig functioneel?”
+
+**Kort antwoord:** nee, niet volledig bewezen in deze audit-omgeving.
+
+Feitelijk vastgesteld op 2026-04-28:
+
+- Wat **wel** functioneert en reproduceerbaar is in deze omgeving:
+  - statische script-syntax check
+  - format check
+  - repository quality gate
+- Wat **niet** volledig functioneel/reproduceerbaar is in deze omgeving:
+  - Dockerized `idf.py` buildflow (Docker ontbreekt)
+  - flash/monitor/hardware commissioning op ESP32-C6 (geen hardwaretest uitgevoerd)
+
+Daarom kan de repro pas als “volledig functioneel” worden bevestigd zodra de Dockerized build én de hardware commissioning stappen aantoonbaar slagen in een geschikte omgeving.
