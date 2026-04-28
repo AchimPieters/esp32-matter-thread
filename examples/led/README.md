@@ -61,7 +61,7 @@ Deze example gebruikt:
 - `idf >= 5.4`
 - `espressif/esp_matter == 1.4.0`
 
-Dit is de gestabiliseerde combinatie voor CI (`5.4.2`) en werkt ook met IDF `6.0` dankzij de lokale `components/json` compat-shim.
+Dit is de gestabiliseerde combinatie voor CI (`espressif/idf:v5.4.2`). ESP-IDF `6.0` staat in CI als experimenteel/allowed-failure totdat een aparte, bewezen compatibele dependencyset is vastgelegd.
 
 Aanbevolen schone build-sequentie:
 
