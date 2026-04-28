@@ -60,7 +60,7 @@ Deze example gebruikt:
 
 - `idf >= 5.4, < 6.0`
 - `espressif/esp_matter == 1.4.2~1`
-
+- `espressif/json` en `espressif/mqtt` als managed dependencies voor compatibiliteit met ESP-IDF 6.0 component-resolutie
 Dit is de gestabiliseerde combinatie voor CI (`espressif/idf:v5.4.2`). ESP-IDF `6.0` staat in CI als experimenteel/allowed-failure totdat een aparte, bewezen compatibele dependencyset is vastgelegd.
 
 Aanbevolen schone build-sequentie:
