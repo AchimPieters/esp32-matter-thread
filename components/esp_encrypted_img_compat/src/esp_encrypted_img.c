@@ -28,13 +28,13 @@ typedef enum {
     ESP_PRE_ENC_DATA_DECODE_STATE,
 } esp_encrypted_img_state;
 
-#define GCM_KEY_SIZE        32
-#define MAGIC_SIZE          4
-#define ENC_GCM_KEY_SIZE    384
-#define IV_SIZE             16
-#define BIN_SIZE_DATA       4
-#define AUTH_SIZE           16
-#define RESERVED_HEADER     88
+#define GCM_KEY_SIZE 32
+#define MAGIC_SIZE 4
+#define ENC_GCM_KEY_SIZE 384
+#define IV_SIZE 16
+#define BIN_SIZE_DATA 4
+#define AUTH_SIZE 16
+#define RESERVED_HEADER 88
 
 struct esp_encrypted_img_handle {
     char *rsa_pem;
@@ -58,41 +58,41 @@ typedef struct {
     char auth[AUTH_SIZE];
     char extra_header[RESERVED_HEADER];
 } pre_enc_bin_header;
-#define HEADER_DATA_SIZE    sizeof(pre_enc_bin_header)
+#define HEADER_DATA_SIZE sizeof(pre_enc_bin_header)
 
 // Magic Byte is created using command: echo -n "esp_encrypted_img" | sha256sum
 static uint32_t esp_enc_img_magic = 0x0788b6cf;
 
 typedef struct esp_encrypted_img_handle esp_encrypted_img_t;
 
-static int esp_encrypted_img_rng(void *ctx, unsigned char *output, size_t len)
-{
+static int esp_encrypted_img_rng(void *ctx, unsigned char *output, size_t len) {
     (void)ctx;
     esp_fill_random(output, len);
     return 0;
 }
 
-static int decipher_gcm_key(const char *enc_gcm, esp_encrypted_img_t *handle)
-{
+static int decipher_gcm_key(const char *enc_gcm, esp_encrypted_img_t *handle) {
     int ret = 1;
     size_t olen = 0;
     mbedtls_pk_context pk;
-    mbedtls_pk_init( &pk );
+    mbedtls_pk_init(&pk);
 
     ESP_LOGI(TAG, "Reading RSA private key");
 
 #if (MBEDTLS_VERSION_NUMBER < 0x03000000)
-    if ( (ret = mbedtls_pk_parse_key(&pk, (const unsigned char *) handle->rsa_pem, handle->rsa_len, NULL, 0)) != 0) {
+    if ((ret = mbedtls_pk_parse_key(&pk, (const unsigned char *)handle->rsa_pem, handle->rsa_len, NULL, 0)) != 0) {
 #else
-    if ( (ret = mbedtls_pk_parse_key(&pk, (const unsigned char *) handle->rsa_pem, handle->rsa_len, NULL, 0, esp_encrypted_img_rng, NULL)) != 0) {
+    if ((ret = mbedtls_pk_parse_key(&pk, (const unsigned char *)handle->rsa_pem, handle->rsa_len, NULL, 0,
+                                    esp_encrypted_img_rng, NULL)) != 0) {
 #endif
-        ESP_LOGE(TAG, "failed\n  ! mbedtls_pk_parse_keyfile returned -0x%04x\n", (unsigned int) - ret );
+        ESP_LOGE(TAG, "failed\n  ! mbedtls_pk_parse_keyfile returned -0x%04x\n", (unsigned int)-ret);
         goto exit;
     }
 
-    if (( ret = mbedtls_pk_decrypt( &pk, (const unsigned char *)enc_gcm, ENC_GCM_KEY_SIZE, (unsigned char *)handle->gcm_key, &olen, GCM_KEY_SIZE,
-                                    esp_encrypted_img_rng, NULL ) ) != 0 ) {
-        ESP_LOGE(TAG, "failed\n  ! mbedtls_pk_decrypt returned -0x%04x\n", (unsigned int) - ret );
+    if ((ret =
+             mbedtls_pk_decrypt(&pk, (const unsigned char *)enc_gcm, ENC_GCM_KEY_SIZE, (unsigned char *)handle->gcm_key,
+                                &olen, GCM_KEY_SIZE, esp_encrypted_img_rng, NULL)) != 0) {
+        ESP_LOGE(TAG, "failed\n  ! mbedtls_pk_decrypt returned -0x%04x\n", (unsigned int)-ret);
         goto exit;
     }
     handle->cache_buf = realloc(handle->cache_buf, 16);
@@ -103,15 +103,14 @@ static int decipher_gcm_key(const char *enc_gcm, esp_encrypted_img_t *handle)
     handle->binary_file_read = 0;
     handle->cache_buf_len = 0;
 exit:
-    mbedtls_pk_free( &pk );
+    mbedtls_pk_free(&pk);
     free(handle->rsa_pem);
     handle->rsa_pem = NULL;
 
     return (ret);
 }
 
-esp_decrypt_handle_t esp_encrypted_img_decrypt_start(const esp_decrypt_cfg_t *cfg)
-{
+esp_decrypt_handle_t esp_encrypted_img_decrypt_start(const esp_decrypt_cfg_t *cfg) {
     if (cfg == NULL || cfg->rsa_priv_key == NULL) {
         ESP_LOGE(TAG, "esp_encrypted_img_decrypt_start : Invalid argument");
         return NULL;
@@ -151,8 +150,7 @@ failure:
     return NULL;
 }
 
-static esp_err_t process_bin(esp_encrypted_img_t *handle, pre_enc_decrypt_arg_t *args, int curr_index)
-{
+static esp_err_t process_bin(esp_encrypted_img_t *handle, pre_enc_decrypt_arg_t *args, int curr_index) {
     size_t data_len = args->data_in_len;
     size_t data_out_size = args->data_out_len;
 #if !(MBEDTLS_VERSION_NUMBER < 0x03000000)
@@ -163,8 +161,10 @@ static esp_err_t process_bin(esp_encrypted_img_t *handle, pre_enc_decrypt_arg_t 
     if (handle->binary_file_read != handle->binary_file_len) {
         size_t copy_len = 0;
 
-        if ((handle->cache_buf_len + (data_len - curr_index)) - (handle->cache_buf_len + (data_len - curr_index)) % 16 > 0) {
-            data_out_size = (handle->cache_buf_len + (data_len - curr_index)) - (handle->cache_buf_len + (data_len - curr_index)) % 16;
+        if ((handle->cache_buf_len + (data_len - curr_index)) - (handle->cache_buf_len + (data_len - curr_index)) % 16 >
+            0) {
+            data_out_size = (handle->cache_buf_len + (data_len - curr_index)) -
+                            (handle->cache_buf_len + (data_len - curr_index)) % 16;
             args->data_out = realloc(args->data_out, data_out_size);
             if (!args->data_out) {
                 return ESP_ERR_NO_MEM;
@@ -179,9 +179,11 @@ static esp_err_t process_bin(esp_encrypted_img_t *handle, pre_enc_decrypt_arg_t 
                 return ESP_ERR_NOT_FINISHED;
             }
 #if (MBEDTLS_VERSION_NUMBER < 0x03000000)
-            if (mbedtls_gcm_update(&handle->gcm_ctx, 16, (const unsigned char *)handle->cache_buf, (unsigned char *) args->data_out) != 0) {
+            if (mbedtls_gcm_update(&handle->gcm_ctx, 16, (const unsigned char *)handle->cache_buf,
+                                   (unsigned char *)args->data_out) != 0) {
 #else
-            if (mbedtls_gcm_update(&handle->gcm_ctx, (const unsigned char *)handle->cache_buf, 16, (unsigned char *) args->data_out, data_out_size, &olen) != 0) {
+            if (mbedtls_gcm_update(&handle->gcm_ctx, (const unsigned char *)handle->cache_buf, 16,
+                                   (unsigned char *)args->data_out, data_out_size, &olen) != 0) {
 #endif
                 return ESP_FAIL;
             }
@@ -195,9 +197,13 @@ static esp_err_t process_bin(esp_encrypted_img_t *handle, pre_enc_decrypt_arg_t 
 
         if (data_len - copy_len - curr_index > 0) {
 #if (MBEDTLS_VERSION_NUMBER < 0x03000000)
-            if (mbedtls_gcm_update(&handle->gcm_ctx, data_len - copy_len - curr_index, (const unsigned char *)args->data_in + curr_index + copy_len, (unsigned char *)args->data_out + dec_len) != 0) {
+            if (mbedtls_gcm_update(&handle->gcm_ctx, data_len - copy_len - curr_index,
+                                   (const unsigned char *)args->data_in + curr_index + copy_len,
+                                   (unsigned char *)args->data_out + dec_len) != 0) {
 #else
-            if (mbedtls_gcm_update(&handle->gcm_ctx, (const unsigned char *)args->data_in + curr_index + copy_len, data_len - copy_len - curr_index, (unsigned char *)args->data_out + dec_len, data_out_size - dec_len, &olen) != 0) {
+            if (mbedtls_gcm_update(&handle->gcm_ctx, (const unsigned char *)args->data_in + curr_index + copy_len,
+                                   data_len - copy_len - curr_index, (unsigned char *)args->data_out + dec_len,
+                                   data_out_size - dec_len, &olen) != 0) {
 #endif
                 return ESP_FAIL;
             }
@@ -216,17 +222,23 @@ static esp_err_t process_bin(esp_encrypted_img_t *handle, pre_enc_decrypt_arg_t 
     memcpy(handle->cache_buf + handle->cache_buf_len, args->data_in + curr_index, copy_len);
     handle->cache_buf_len += copy_len;
 #if (MBEDTLS_VERSION_NUMBER < 0x03000000)
-    if (mbedtls_gcm_update(&handle->gcm_ctx, handle->cache_buf_len, (const unsigned char *)handle->cache_buf, (unsigned char *)args->data_out) != 0) {
+    if (mbedtls_gcm_update(&handle->gcm_ctx, handle->cache_buf_len, (const unsigned char *)handle->cache_buf,
+                           (unsigned char *)args->data_out) != 0) {
 #else
-    if (mbedtls_gcm_update(&handle->gcm_ctx,  (const unsigned char *)handle->cache_buf, handle->cache_buf_len, (unsigned char *)args->data_out, data_out_size, &olen) != 0) {
+    if (mbedtls_gcm_update(&handle->gcm_ctx, (const unsigned char *)handle->cache_buf, handle->cache_buf_len,
+                           (unsigned char *)args->data_out, data_out_size, &olen) != 0) {
 #endif
         return ESP_FAIL;
     }
     if (data_len - curr_index - copy_len > 0) {
 #if (MBEDTLS_VERSION_NUMBER < 0x03000000)
-        if (mbedtls_gcm_update(&handle->gcm_ctx, data_len - curr_index - copy_len, (const unsigned char *)(args->data_in + curr_index + copy_len), (unsigned char *)(args->data_out + 16)) != 0) {
+        if (mbedtls_gcm_update(&handle->gcm_ctx, data_len - curr_index - copy_len,
+                               (const unsigned char *)(args->data_in + curr_index + copy_len),
+                               (unsigned char *)(args->data_out + 16)) != 0) {
 #else
-        if (mbedtls_gcm_update(&handle->gcm_ctx,  (const unsigned char *)(args->data_in + curr_index + copy_len), data_len - curr_index - copy_len, (unsigned char *)(args->data_out + 16), data_out_size - 16, &olen) != 0) {
+        if (mbedtls_gcm_update(&handle->gcm_ctx, (const unsigned char *)(args->data_in + curr_index + copy_len),
+                               data_len - curr_index - copy_len, (unsigned char *)(args->data_out + 16),
+                               data_out_size - 16, &olen) != 0) {
 #endif
             return ESP_FAIL;
         }
@@ -238,8 +250,8 @@ static esp_err_t process_bin(esp_encrypted_img_t *handle, pre_enc_decrypt_arg_t 
     return ESP_OK;
 }
 
-static void read_and_cache_data(esp_encrypted_img_t *handle, pre_enc_decrypt_arg_t *args, int *curr_index, int data_size)
-{
+static void read_and_cache_data(esp_encrypted_img_t *handle, pre_enc_decrypt_arg_t *args, int *curr_index,
+                                int data_size) {
     const int data_left = data_size - handle->binary_file_read;
     const int data_recv = args->data_in_len - *curr_index;
     if (handle->state == ESP_PRE_ENC_IMG_READ_IV) {
@@ -255,8 +267,7 @@ static void read_and_cache_data(esp_encrypted_img_t *handle, pre_enc_decrypt_arg
     handle->binary_file_read += MIN(args->data_in_len - temp, data_left);
 }
 
-esp_err_t esp_encrypted_img_decrypt_data(esp_decrypt_handle_t ctx, pre_enc_decrypt_arg_t *args)
-{
+esp_err_t esp_encrypted_img_decrypt_data(esp_decrypt_handle_t ctx, pre_enc_decrypt_arg_t *args) {
     if (ctx == NULL || args == NULL || args->data_in == NULL) {
         return ESP_ERR_INVALID_ARG;
     }
@@ -333,16 +344,19 @@ esp_err_t esp_encrypted_img_decrypt_data(esp_decrypt_handle_t ctx, pre_enc_decry
             handle->binary_file_read = 0;
             handle->cache_buf_len = 0;
             mbedtls_gcm_init(&handle->gcm_ctx);
-            if ((err = mbedtls_gcm_setkey(&handle->gcm_ctx, MBEDTLS_CIPHER_ID_AES, (const unsigned char *)handle->gcm_key, GCM_KEY_SIZE * 8)) != 0) {
-                ESP_LOGE(TAG, "Error: mbedtls_gcm_set_key: -0x%04x\n", (unsigned int) - err);
+            if ((err = mbedtls_gcm_setkey(&handle->gcm_ctx, MBEDTLS_CIPHER_ID_AES,
+                                          (const unsigned char *)handle->gcm_key, GCM_KEY_SIZE * 8)) != 0) {
+                ESP_LOGE(TAG, "Error: mbedtls_gcm_set_key: -0x%04x\n", (unsigned int)-err);
                 return ESP_FAIL;
             }
 #if (MBEDTLS_VERSION_NUMBER < 0x03000000)
-            if (mbedtls_gcm_starts(&handle->gcm_ctx, MBEDTLS_GCM_DECRYPT, (const unsigned char *)handle->iv, IV_SIZE, NULL, 0) != 0) {
+            if (mbedtls_gcm_starts(&handle->gcm_ctx, MBEDTLS_GCM_DECRYPT, (const unsigned char *)handle->iv, IV_SIZE,
+                                   NULL, 0) != 0) {
 #else
-            if (mbedtls_gcm_starts(&handle->gcm_ctx, MBEDTLS_GCM_DECRYPT, (const unsigned char *)handle->iv, IV_SIZE) != 0) {
+            if (mbedtls_gcm_starts(&handle->gcm_ctx, MBEDTLS_GCM_DECRYPT, (const unsigned char *)handle->iv, IV_SIZE) !=
+                0) {
 #endif
-                ESP_LOGE(TAG, "Error: mbedtls_gcm_starts: -0x%04x\n", (unsigned int) - err);
+                ESP_LOGE(TAG, "Error: mbedtls_gcm_starts: -0x%04x\n", (unsigned int)-err);
                 return ESP_FAIL;
             }
         } else {
@@ -393,7 +407,7 @@ esp_err_t esp_encrypted_img_decrypt_data(esp_decrypt_handle_t ctx, pre_enc_decry
             return ESP_ERR_NOT_FINISHED;
         }
     }
-/* falls through */
+        /* falls through */
     case ESP_PRE_ENC_DATA_DECODE_STATE:
         err = process_bin(handle, args, curr_index);
         return err;
@@ -401,8 +415,7 @@ esp_err_t esp_encrypted_img_decrypt_data(esp_decrypt_handle_t ctx, pre_enc_decry
     return ESP_OK;
 }
 
-esp_err_t esp_encrypted_img_decrypt_end(esp_decrypt_handle_t ctx)
-{
+esp_err_t esp_encrypted_img_decrypt_end(esp_decrypt_handle_t ctx) {
     if (ctx == NULL) {
         return ESP_ERR_INVALID_ARG;
     }
@@ -446,14 +459,12 @@ exit:
     return err;
 }
 
-bool esp_encrypted_img_is_complete_data_received(esp_decrypt_handle_t ctx)
-{
+bool esp_encrypted_img_is_complete_data_received(esp_decrypt_handle_t ctx) {
     esp_encrypted_img_t *handle = (esp_encrypted_img_t *)ctx;
     return (handle != NULL && handle->binary_file_len == handle->binary_file_read);
 }
 
-esp_err_t esp_encrypted_img_decrypt_abort(esp_decrypt_handle_t ctx)
-{
+esp_err_t esp_encrypted_img_decrypt_abort(esp_decrypt_handle_t ctx) {
     esp_encrypted_img_t *handle = (esp_encrypted_img_t *)ctx;
     if (handle == NULL) {
         ESP_LOGE(TAG, "esp_encrypted_img_decrypt_data: Invalid argument");
