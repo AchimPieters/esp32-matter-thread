@@ -66,31 +66,18 @@ jobs:
       - name: Clean build artifacts
         run: |
           # Remove build output and cached managed_components so they are
-          # re-downloaded fresh.  Do NOT delete dependencies.lock: the
-          # committed lock pins esp_matter to the exact 1.4.0 base archive
-          # (component_hash a1c97fe1…) which was verified to compile with
-          # IDF v5.4.2/GCC-14.  Without the lock the component manager
-          # selects the latest 1.4.0~N patch, which introduced
-          # ClosureControl::GenericOverallTargetState – a struct without
-          # operator== that breaks std::optional comparison under GCC 14.
+          # re-downloaded fresh against the current manifest constraints.
           rm -rf examples/led/build examples/led/managed_components
       - name: IDF support status
         run: |
           if [[ "${{ matrix.experimental }}" == "true" ]]; then
             echo "=== IDF v6.0: EXPERIMENTAL (expected to fail) ==="
-            echo "Known incompatibilities with esp_matter 1.4.0 on IDF v6.0:"
-            echo "  1. esp_encrypted_img 2.1.0 (pinned by esp_matter 1.4.0) includes"
-            echo "     mbedtls/entropy.h directly. IDF v6.0 restructured mbedTLS:"
-            echo "     that header is no longer on the default include path"
-            echo "     (it lives only under OpenThread's bundled copy)."
-            echo "     Resolution: requires esp_matter >= 1.4.x that allows"
-            echo "     esp_encrypted_img >= 2.2 (IDF-v6-compatible)."
-            echo "  2. The built-in 'json' component may be absent in IDF v6.0;"
-            echo "     esp_matter CMakeLists.txt lists it in REQUIRE_COMPONENTS."
+            echo "IDF v6.0 remains experimental for this repository."
+            echo "This job is continue-on-error and does not block CI."
             echo "This job is continue-on-error: true and does not block CI."
           else
             echo "ESP-IDF v5.4.2 is the primary supported CI target."
-            echo "Using committed dependencies.lock (esp_matter 1.4.0 base, no ~N patch)."
+            echo "Using esp_matter==1.4.2~1 per manifests."
           fi
       - name: Build LED example in Docker (ESP32-C6)
         env:
